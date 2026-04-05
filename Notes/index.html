@@ -170,6 +170,7 @@ footer strong{color:var(--accent);font-family:var(--font-display)}
     <li><a href="#apply">Apply</a></li>
     <li><a href="#datetime">DateTime</a></li>
     <li><a href="#strings">Strings</a></li>
+    <li><a href="#matplotlib">Matplotlib</a></li>
     <li><a href="#exercises">Exercises</a></li>
   </ul>
   <div class="hamburger" id="ham" onclick="toggleMenu()"><span></span><span></span><span></span></div>
@@ -190,6 +191,7 @@ footer strong{color:var(--accent);font-family:var(--font-display)}
   <a href="#apply" onclick="closeMenu()">⚙️ Apply</a>
   <a href="#datetime" onclick="closeMenu()">📅 DateTime</a>
   <a href="#strings" onclick="closeMenu()">🔤 Strings</a>
+  <a href="#matplotlib" onclick="closeMenu()">📈 Matplotlib</a>
   <a href="#exercises" onclick="closeMenu()">✏️ Exercises</a>
 </div>
 
@@ -209,7 +211,7 @@ footer strong{color:var(--accent);font-family:var(--font-display)}
       <div class="stat-chips">
         <div class="chip"><span class="chip-icon">📦</span><div><div class="chip-num">1,000</div><div class="chip-label">Student Records</div></div></div>
         <div class="chip"><span class="chip-icon">🗂️</span><div><div class="chip-num">8</div><div class="chip-label">Columns</div></div></div>
-        <div class="chip"><span class="chip-icon">📚</span><div><div class="chip-num">17</div><div class="chip-label">Topics Covered</div></div></div>
+        <div class="chip"><span class="chip-icon">📚</span><div><div class="chip-num">18</div><div class="chip-label">Topics Covered</div></div></div>
       </div>
     </div>
     <div class="hero-terminal">
@@ -989,9 +991,304 @@ dtype: object</div>
 
 <div class="divider"></div>
 
+<!-- MATPLOTLIB — NEW SECTION -->
+<section id="matplotlib">
+  <div class="sec-label">17 — Data Visualization</div>
+  <h2>Matplotlib — Visualizing Your Data</h2>
+  <p class="sec-desc">Turn GroupBy results into charts. Line plots, scatter plots, box plots, and bar charts — all grounded in real Google Play Store data.</p>
+
+  <!-- TOPIC 23: LINE PLOT -->
+  <div class="topic-section">
+    <div class="topic-header"><span class="topic-num">23</span><span class="topic-title">plt.plot() — Line Charts &amp; Time Series</span><span class="badge cyan">Line Plot</span></div>
+    <div class="topic-body">
+      <div class="explain-block">
+        <h3>The groupby → Series → plot() Pattern</h3>
+        <p>The most common visualization workflow: group by a column, aggregate, then plot the resulting Series. The Series index becomes the x-axis automatically.</p>
+        <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><code><span class="k">import</span> <span class="v">matplotlib.pyplot</span> <span class="k">as</span> <span class="v">plt</span>
+
+<span class="c"># Step 1 — GroupBy year</span>
+<span class="v">group_year</span> = <span class="v">df</span>.<span class="f">groupby</span>(<span class="s">'Year'</span>)
+
+<span class="c"># Step 2 — Aggregate (returns a Series)</span>
+<span class="v">year_avg_rating</span> = <span class="v">group_year</span>[<span class="s">'Rating'</span>].<span class="f">mean</span>()
+
+<span class="c"># Step 3 — Inspect the result</span>
+<span class="f">type</span>(<span class="v">year_avg_rating</span>)       <span class="c"># pandas.core.series.Series</span>
+<span class="v">year_avg_rating</span>.index       <span class="c"># Int64Index([2010, 2011, ..., 2018])</span>
+
+<span class="c"># Step 4 — Plot it</span>
+<span class="v">plt</span>.<span class="f">plot</span>(<span class="v">year_avg_rating</span>, marker=<span class="s">'o'</span>)
+<span class="v">plt</span>.<span class="f">xticks</span>(<span class="v">year_avg_rating</span>.index)
+<span class="v">plt</span>.<span class="f">xlabel</span>(<span class="s">'Years'</span>)
+<span class="v">plt</span>.<span class="f">ylabel</span>(<span class="s">'Rating'</span>)
+<span class="v">plt</span>.<span class="f">title</span>(<span class="s">"Year vs Rating"</span>)
+<span class="v">plt</span>.<span class="f">grid</span>()
+<span class="v">plt</span>.<span class="f">show</span>()</code></pre></div>
+        <div class="callout info"><div class="callout-icon">🧠</div><div class="callout-body"><div class="callout-title">Why plt.xticks(year_avg_rating.index)?</div><div class="callout-text">By default, Matplotlib picks tick positions automatically and may skip years. Passing the Series index forces every year to appear on the x-axis — essential for time-series clarity.</div></div></div>
+      </div>
+
+      <div class="explain-block">
+        <h3>⭐ 4 Key Time-Series Questions — One Pattern</h3>
+        <p>Every question below follows the exact same <strong>groupby → agg → plt.plot()</strong> recipe. Only the column and aggregation function change.</p>
+        <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><code><span class="c"># Q1: How has the average app rating changed over time?</span>
+<span class="v">df</span>.<span class="f">groupby</span>(<span class="s">'Year'</span>)[<span class="s">'Rating'</span>].<span class="f">mean</span>()
+
+<span class="c"># Q2: How have total installs grown over the years?</span>
+<span class="v">df</span>.<span class="f">groupby</span>(<span class="s">'Year'</span>)[<span class="s">'Installs'</span>].<span class="f">sum</span>()
+
+<span class="c"># Q3: How has the number of apps released changed over time?</span>
+<span class="v">df</span>.<span class="f">groupby</span>(<span class="s">'Year'</span>)[<span class="s">'App'</span>].<span class="f">count</span>()
+
+<span class="c"># Q4: How has the average app price changed over time?</span>
+<span class="v">df</span>.<span class="f">groupby</span>(<span class="s">'Year'</span>)[<span class="s">'Price'</span>].<span class="f">mean</span>()</code></pre></div>
+        <div class="output-label">▸ Universal plotting template for all 4</div>
+        <div class="output-box">result = df.groupby('Year')['column'].agg_fn()
+
+plt.plot(result, marker='o')
+plt.xticks(result.index)
+plt.xlabel('Year')
+plt.ylabel('column')
+plt.title('Year vs column')
+plt.grid()
+plt.show()</div>
+      </div>
+
+      <table class="comp-table">
+        <thead><tr><th>Question</th><th>GroupBy</th><th>Column</th><th>Aggregation</th></tr></thead>
+        <tbody>
+          <tr><td>Avg rating over time?</td><td><code>'Year'</code></td><td><code>'Rating'</code></td><td><code>.mean()</code></td></tr>
+          <tr><td>Total installs growth?</td><td><code>'Year'</code></td><td><code>'Installs'</code></td><td><code>.sum()</code></td></tr>
+          <tr><td>Apps released per year?</td><td><code>'Year'</code></td><td><code>'App'</code></td><td><code>.count()</code></td></tr>
+          <tr><td>Avg price over time?</td><td><code>'Year'</code></td><td><code>'Price'</code></td><td><code>.mean()</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TOPIC 24: SCATTER PLOT + DATA CLEANING -->
+  <div class="topic-section">
+    <div class="topic-header"><span class="topic-num">24</span><span class="topic-title">Data Cleaning for Viz + plt.scatter()</span><span class="badge pink">Scatter Plot</span></div>
+    <div class="topic-body">
+      <div class="explain-block">
+        <h3>The Problem — Dirty Columns Block Plotting</h3>
+        <p>Real datasets store prices as strings like <code>'$2.99'</code> or with noise values like <code>'Everyone'</code>. You must clean these before passing to Matplotlib — it only accepts numeric arrays.</p>
+        <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><code><span class="c"># Step 1 — Remove the '$' sign from every value</span>
+<span class="v">df</span>[<span class="s">'Price'</span>] = <span class="v">df</span>[<span class="s">'Price'</span>].<span class="f">str</span>.<span class="f">replace</span>(<span class="s">'$'</span>, <span class="s">''</span>)
+
+<span class="c"># Step 2 — Replace noise value 'Everyone' with None (NaN)</span>
+<span class="v">df</span>[<span class="s">'Price'</span>] = <span class="v">df</span>[<span class="s">'Price'</span>].<span class="f">replace</span>({<span class="s">'Everyone'</span>: <span class="k">None</span>})
+
+<span class="c"># Step 3 — Cast string → float</span>
+<span class="v">df</span>[<span class="s">'Price'</span>] = <span class="v">df</span>[<span class="s">'Price'</span>].<span class="f">astype</span>(<span class="v">float</span>)</code></pre></div>
+        <div class="callout warn"><div class="callout-icon">⚠️</div><div class="callout-body"><div class="callout-title">Order Matters — Strip Before Cast</div><div class="callout-text">Always <code>str.replace()</code> → <code>.replace(noise, None)</code> → <code>.astype(float)</code> in that order. Calling <code>astype(float)</code> on <code>'$2.99'</code> raises a <code>ValueError</code>. The dollar sign must be gone first.</div></div></div>
+      </div>
+
+      <div class="explain-block">
+        <h3>plt.scatter() — Rating vs Price</h3>
+        <p>A scatter plot places each row as a dot at (x, y). It reveals correlations, clusters, and outliers between two numeric columns.</p>
+        <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><code><span class="v">plt</span>.<span class="f">scatter</span>(<span class="v">df</span>[<span class="s">'Rating'</span>], <span class="v">df</span>[<span class="s">'Price'</span>])
+<span class="v">plt</span>.<span class="f">xlabel</span>(<span class="s">'Rating'</span>)
+<span class="v">plt</span>.<span class="f">ylabel</span>(<span class="s">'Price ($)'</span>)
+<span class="v">plt</span>.<span class="f">title</span>(<span class="s">'Rating vs Price'</span>)
+<span class="v">plt</span>.<span class="f">show</span>()</code></pre></div>
+        <div class="output-label">▸ What the scatter reveals</div>
+        <div class="output-box">Most apps are free (Price = 0) across all rating ranges.
+A handful of expensive apps ($10–$400) have ratings 4.0–4.5.
+No clear correlation — price alone doesn't predict rating.</div>
+      </div>
+
+      <table class="comp-table">
+        <thead><tr><th>Plot Type</th><th>Function</th><th>Best For</th><th>x &amp; y</th></tr></thead>
+        <tbody>
+          <tr><td>Line</td><td><code>plt.plot()</code></td><td>Trends over time</td><td>Series index, Series values</td></tr>
+          <tr><td>Scatter</td><td><code>plt.scatter()</code></td><td>Correlation between two columns</td><td>Two numeric columns</td></tr>
+          <tr><td>Bar</td><td><code>plt.bar()</code></td><td>Comparing categories</td><td>Group labels, aggregated values</td></tr>
+          <tr><td>Box</td><td><code>plt.boxplot()</code></td><td>Distribution &amp; outliers</td><td>One numeric column</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TOPIC 25: Z-SCORE + BOXPLOT -->
+  <div class="topic-section">
+    <div class="topic-header"><span class="topic-num">25</span><span class="topic-title">Z-Score Normalization + plt.boxplot()</span><span class="badge amber">Statistics</span></div>
+    <div class="topic-body">
+      <div class="explain-block">
+        <h3>What is Z-Score Normalization?</h3>
+        <p>Z-score transforms raw values into <strong>how many standard deviations from the mean</strong> they are. Values near 0 are average. Values beyond ±3 are typically outliers. This lets you compare columns on wildly different scales.</p>
+        <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><code><span class="c"># Z-score formula: (X - mean) / std</span>
+<span class="k">def</span> <span class="f">z_score</span>(<span class="v">col</span>):
+    <span class="v">X</span>      = <span class="v">df</span>[<span class="v">col</span>]
+    <span class="v">x_mean</span> = <span class="v">df</span>[<span class="v">col</span>].<span class="f">mean</span>()
+    <span class="v">x_std</span>  = <span class="v">df</span>[<span class="v">col</span>].<span class="f">std</span>()
+    <span class="k">return</span> (<span class="v">X</span> - <span class="v">x_mean</span>) / <span class="v">x_std</span>
+
+<span class="c"># Apply to Rating column — creates a new normalized column</span>
+<span class="v">df</span>[<span class="s">'Rating_Z'</span>] = <span class="f">z_score</span>(<span class="s">'Rating'</span>)</code></pre></div>
+        <div class="output-label">▸ Before and after Z-score</div>
+        <div class="output-box">Rating    →    Rating_Z
+4.1       →    -0.152
+4.5       →     1.285
+2.9       →    -3.624   ← outlier (more than 3 std below mean)
+4.7       →     2.003</div>
+      </div>
+
+      <div class="explain-block">
+        <h3>plt.boxplot() — Visualizing Distribution &amp; Outliers</h3>
+        <p>The box plot shows 5 key statistics at once: minimum, Q1, median, Q3, and maximum. Dots beyond the whiskers are <strong>outliers</strong>.</p>
+        <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><code><span class="c"># Drop NaN first — boxplot cannot handle missing values</span>
+<span class="v">df</span> = <span class="v">df</span>.<span class="f">dropna</span>()
+
+<span class="c"># Plot Z-score of ratings — shows normalized distribution</span>
+<span class="v">plt</span>.<span class="f">figure</span>(figsize=(<span class="n">10</span>, <span class="n">20</span>))
+<span class="v">plt</span>.<span class="f">boxplot</span>(<span class="v">df</span>[<span class="s">'Rating_Z'</span>])
+<span class="v">plt</span>.<span class="f">title</span>(<span class="s">'Z-Score of Ratings'</span>)
+<span class="v">plt</span>.<span class="f">show</span>()
+
+<span class="c"># Compare: raw Reviews column (extreme skew, not normalized)</span>
+<span class="v">plt</span>.<span class="f">boxplot</span>(<span class="v">df</span>[<span class="s">'Reviews'</span>])
+<span class="v">plt</span>.<span class="f">title</span>(<span class="s">'Reviews Distribution'</span>)
+<span class="v">plt</span>.<span class="f">show</span>()</code></pre></div>
+        <div class="callout tip"><div class="callout-icon">💡</div><div class="callout-body"><div class="callout-title">Z-Score + Boxplot is an Outlier Detection Pipeline</div><div class="callout-text">The workflow: <strong>z_score() → dropna() → boxplot()</strong>. Normalized data makes it easy to spot outliers visually. Any dot beyond ±3 on the z-scored boxplot is a statistical outlier worth investigating.</div></div></div>
+      </div>
+
+      <div class="explain-block">
+        <h3>Reading a Box Plot — The 5 Numbers</h3>
+        <table class="comp-table">
+          <thead><tr><th>Part</th><th>Meaning</th><th>Z-Score interpretation</th></tr></thead>
+          <tbody>
+            <tr><td>Bottom whisker</td><td>Min (excluding outliers)</td><td>Lowest typical value</td></tr>
+            <tr><td>Bottom of box (Q1)</td><td>25th percentile</td><td>Bottom 25% of data</td></tr>
+            <tr><td>Line in box</td><td>Median (Q2)</td><td>Middle value — ≈ 0 after z-score</td></tr>
+            <tr><td>Top of box (Q3)</td><td>75th percentile</td><td>Top 25% of data</td></tr>
+            <tr><td>Top whisker</td><td>Max (excluding outliers)</td><td>Highest typical value</td></tr>
+            <tr><td>Dots beyond whiskers</td><td>Outliers</td><td>Beyond ±1.5 × IQR</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOPIC 26: BAR CHARTS + GROUPBY -->
+  <div class="topic-section">
+    <div class="topic-header"><span class="topic-num">26</span><span class="topic-title">plt.bar() with groupby() — Categorical Analysis</span><span class="badge green">Bar Charts</span></div>
+    <div class="topic-body">
+      <div class="explain-block">
+        <h3>4 Bar Chart Patterns — Category Analysis</h3>
+        <p>Use <code>groupby()</code> first, then pass <code>.index</code> as x-axis labels and <code>.values</code> as bar heights. Always rotate x-tick labels for category names.</p>
+        <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><code><span class="c"># Chart 1 — Average rating per category</span>
+<span class="v">cat_rating</span> = <span class="v">df</span>.<span class="f">groupby</span>(<span class="s">'Category'</span>)[<span class="s">'Rating'</span>].<span class="f">mean</span>()
+<span class="v">plt</span>.<span class="f">bar</span>(<span class="v">cat_rating</span>.index, <span class="v">cat_rating</span>.values)
+<span class="v">plt</span>.<span class="f">xticks</span>(rotation=<span class="n">90</span>)
+<span class="v">plt</span>.<span class="f">title</span>(<span class="s">'Avg Rating by Category'</span>)
+<span class="v">plt</span>.<span class="f">show</span>()
+
+<span class="c"># Chart 2 — Total installs per category</span>
+<span class="v">cat_installs</span> = <span class="v">df</span>.<span class="f">groupby</span>(<span class="s">'Category'</span>)[<span class="s">'Installs'</span>].<span class="f">sum</span>()
+<span class="v">plt</span>.<span class="f">bar</span>(<span class="v">cat_installs</span>.index, <span class="v">cat_installs</span>.values)
+<span class="v">plt</span>.<span class="f">xticks</span>(rotation=<span class="n">90</span>)
+<span class="v">plt</span>.<span class="f">title</span>(<span class="s">'Total Installs by Category'</span>)
+<span class="v">plt</span>.<span class="f">show</span>()
+
+<span class="c"># Chart 3 — Free vs Paid app count</span>
+<span class="v">type_count</span> = <span class="v">df</span>[<span class="s">'Type'</span>].<span class="f">value_counts</span>()
+<span class="v">plt</span>.<span class="f">bar</span>(<span class="v">type_count</span>.index, <span class="v">type_count</span>.values)
+<span class="v">plt</span>.<span class="f">title</span>(<span class="s">'Free vs Paid Apps'</span>)
+<span class="v">plt</span>.<span class="f">show</span>()
+
+<span class="c"># Chart 4 — Avg rating by content rating</span>
+<span class="v">content_rating</span> = <span class="v">df</span>.<span class="f">groupby</span>(<span class="s">'Content Rating'</span>)[<span class="s">'Rating'</span>].<span class="f">mean</span>()
+<span class="v">plt</span>.<span class="f">bar</span>(<span class="v">content_rating</span>.index, <span class="v">content_rating</span>.values)
+<span class="v">plt</span>.<span class="f">xticks</span>(rotation=<span class="n">45</span>)
+<span class="v">plt</span>.<span class="f">title</span>(<span class="s">'Avg Rating by Content Rating'</span>)
+<span class="v">plt</span>.<span class="f">show</span>()</code></pre></div>
+      </div>
+
+      <div class="explain-block">
+        <h3>🚨 The #1 Bar Chart Mistake</h3>
+        <p>Never pass a raw DataFrame column directly to <code>plt.bar()</code> — you get one bar per row (thousands of bars!) and a meaningless, unreadable chart.</p>
+        <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><code><span class="c"># ❌ WRONG — plots one bar per row (messy &amp; meaningless)</span>
+<span class="v">plt</span>.<span class="f">bar</span>(<span class="v">df</span>[<span class="s">'Category'</span>], <span class="v">df</span>[<span class="s">'Rating'</span>])
+
+<span class="c"># ✅ RIGHT — groupby first, then plot the summary</span>
+<span class="v">cat_rating</span> = <span class="v">df</span>.<span class="f">groupby</span>(<span class="s">'Category'</span>)[<span class="s">'Rating'</span>].<span class="f">mean</span>()  <span class="c"># one value per category</span>
+<span class="v">plt</span>.<span class="f">bar</span>(<span class="v">cat_rating</span>.index, <span class="v">cat_rating</span>.values)</code></pre></div>
+        <div class="callout warn"><div class="callout-icon">⚠️</div><div class="callout-body"><div class="callout-title">groupby() First, Plot Second — Always</div><div class="callout-text"><code>plt.bar(df['Category'], df['Rating'])</code> draws one bar per row. If there are 10,000 rows, you get 10,000 bars — unreadable. <strong>Always reduce with groupby + agg first</strong> so each category gets exactly one representative value.</div></div></div>
+      </div>
+
+      <div class="explain-block">
+        <h3>The plt.bar() Structure — What Goes Where</h3>
+        <table class="comp-table">
+          <thead><tr><th>Parameter</th><th>What to pass</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td>x (1st arg)</td><td>Group labels — use <code>.index</code></td><td><code>cat_rating.index</code></td></tr>
+            <tr><td>height (2nd arg)</td><td>Bar heights — use <code>.values</code></td><td><code>cat_rating.values</code></td></tr>
+            <tr><td><code>plt.xticks(rotation=)</code></td><td>Rotate labels to prevent overlap</td><td><code>rotation=90</code> for many categories, <code>45</code> for fewer</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- MATPLOTLIB QUICK REFERENCE -->
+  <div class="topic-section">
+    <div class="topic-header"><span class="topic-num">📊</span><span class="topic-title">Matplotlib Quick Reference</span></div>
+    <div class="topic-body">
+      <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><code><span class="k">import</span> <span class="v">matplotlib.pyplot</span> <span class="k">as</span> <span class="v">plt</span>
+
+<span class="c"># ── LINE PLOT (time series) ──────────────────────────────</span>
+<span class="v">s</span> = <span class="v">df</span>.<span class="f">groupby</span>(<span class="s">'Year'</span>)[<span class="s">'col'</span>].<span class="f">mean</span>()
+<span class="v">plt</span>.<span class="f">plot</span>(<span class="v">s</span>, marker=<span class="s">'o'</span>)
+<span class="v">plt</span>.<span class="f">xticks</span>(<span class="v">s</span>.index)       <span class="c"># force every year as a tick</span>
+<span class="v">plt</span>.<span class="f">grid</span>()
+
+<span class="c"># ── DATA CLEANING (before plotting) ─────────────────────</span>
+<span class="v">df</span>[<span class="s">'Price'</span>] = <span class="v">df</span>[<span class="s">'Price'</span>].<span class="f">str</span>.<span class="f">replace</span>(<span class="s">'$'</span>, <span class="s">''</span>)
+<span class="v">df</span>[<span class="s">'Price'</span>] = <span class="v">df</span>[<span class="s">'Price'</span>].<span class="f">replace</span>({<span class="s">'Everyone'</span>: <span class="k">None</span>})
+<span class="v">df</span>[<span class="s">'Price'</span>] = <span class="v">df</span>[<span class="s">'Price'</span>].<span class="f">astype</span>(<span class="v">float</span>)
+
+<span class="c"># ── SCATTER PLOT ─────────────────────────────────────────</span>
+<span class="v">plt</span>.<span class="f">scatter</span>(<span class="v">df</span>[<span class="s">'Rating'</span>], <span class="v">df</span>[<span class="s">'Price'</span>])
+
+<span class="c"># ── Z-SCORE ──────────────────────────────────────────────</span>
+<span class="k">def</span> <span class="f">z_score</span>(<span class="v">col</span>):
+    <span class="k">return</span> (<span class="v">df</span>[<span class="v">col</span>] - <span class="v">df</span>[<span class="v">col</span>].<span class="f">mean</span>()) / <span class="v">df</span>[<span class="v">col</span>].<span class="f">std</span>()
+<span class="v">df</span>[<span class="s">'Rating_Z'</span>] = <span class="f">z_score</span>(<span class="s">'Rating'</span>)
+
+<span class="c"># ── BOXPLOT (drop NaN first!) ────────────────────────────</span>
+<span class="v">df</span> = <span class="v">df</span>.<span class="f">dropna</span>()
+<span class="v">plt</span>.<span class="f">figure</span>(figsize=(<span class="n">10</span>, <span class="n">20</span>))
+<span class="v">plt</span>.<span class="f">boxplot</span>(<span class="v">df</span>[<span class="s">'Rating_Z'</span>])
+
+<span class="c"># ── BAR CHART (groupby FIRST, then plot) ─────────────────</span>
+<span class="v">cat_rating</span> = <span class="v">df</span>.<span class="f">groupby</span>(<span class="s">'Category'</span>)[<span class="s">'Rating'</span>].<span class="f">mean</span>()
+<span class="v">plt</span>.<span class="f">bar</span>(<span class="v">cat_rating</span>.index, <span class="v">cat_rating</span>.values)
+<span class="v">plt</span>.<span class="f">xticks</span>(rotation=<span class="n">90</span>)
+
+<span class="c"># ── LABELS (always add these) ────────────────────────────</span>
+<span class="v">plt</span>.<span class="f">xlabel</span>(<span class="s">'x label'</span>)
+<span class="v">plt</span>.<span class="f">ylabel</span>(<span class="s">'y label'</span>)
+<span class="v">plt</span>.<span class="f">title</span>(<span class="s">'Chart Title'</span>)
+<span class="v">plt</span>.<span class="f">show</span>()</code></pre></div>
+    </div>
+  </div>
+
+</section>
+
+<div class="divider"></div>
+
 <!-- EXERCISES -->
 <section id="exercises">
-  <div class="sec-label">17 — Exercises &amp; Review</div>
+  <div class="sec-label">18 — Exercises &amp; Review</div>
   <h2>Exercises &amp; Assignments</h2>
   <p class="sec-desc">Test your understanding with interview questions, exercises, and mini projects.</p>
 
@@ -1004,6 +1301,8 @@ dtype: object</div>
       <div class="qa-item"><div class="qa-q">What is groupby()'s internal pattern?</div><div class="qa-a">Split-Apply-Combine: split rows into groups, apply a function to each group independently, combine results into a single output.</div></div>
       <div class="qa-item"><div class="qa-q">What does apply() do and when should you use it?</div><div class="qa-a">apply() calls a Python function once per row value. Use it for complex conditional logic (if/else) that can't be expressed as simple vectorized operations. For simple math or string ops, prefer direct vectorized methods which are faster.</div></div>
       <div class="qa-item"><div class="qa-q">Why convert a column with pd.to_datetime()?</div><div class="qa-a">Date columns load as strings (object dtype). After to_datetime(), they become datetime64[ns], which unlocks .dt.year, .dt.month, date arithmetic, and time-based groupby — none of which work on strings.</div></div>
+      <div class="qa-item"><div class="qa-q">Why must you groupby() before plt.bar()?</div><div class="qa-a">Passing a raw DataFrame column to plt.bar() draws one bar per row — useless for category comparison. You must aggregate first (one value per category) so the chart shows a meaningful summary.</div></div>
+      <div class="qa-item"><div class="qa-q">What is Z-score normalization and why use it?</div><div class="qa-a">Z-score transforms raw values into standard deviations from the mean: (X - mean) / std. It allows comparison across columns with different scales and makes outliers easy to spot — values beyond ±3 are statistical outliers.</div></div>
     </div>
     <div class="ex-card">
       <div class="ex-card-head"><span class="ex-badge exercise">Exercises</span><span class="ex-title">Practice Problems</span></div>
@@ -1018,6 +1317,10 @@ dtype: object</div>
         <li><span class="num">08</span>Using Superstore, group by 'year' and get total Profit per year. Which year had highest profit?</li>
         <li><span class="num">09</span>Extract first names and last names from 'Customer Name' using str.split().str[0] and str[-1].</li>
         <li><span class="num">10</span>Use groupby('lunch').agg({'math score': 'mean'}). Which lunch type leads in performance?</li>
+        <li><span class="num">11</span>Load the Google Play Store dataset. Clean the Price column (remove '$', replace 'Everyone' with None, cast to float). Then plt.scatter(df['Rating'], df['Price']).</li>
+        <li><span class="num">12</span>Write a z_score() function. Apply it to 'Rating'. Drop NaN. Plot plt.boxplot(df['Rating_Z']). How many outliers do you see?</li>
+        <li><span class="num">13</span>groupby('Category')['Rating'].mean() → plt.bar(). Remember to rotate x-ticks 90°. Which category has the highest average rating?</li>
+        <li><span class="num">14</span>Plot yearly trends for Rating, Installs, and app count using groupby('Year'). What year had the most app releases?</li>
       </ul>
     </div>
   </div>
@@ -1028,15 +1331,17 @@ dtype: object</div>
     <div class="mini-assign"><div class="mini-assign-title">📅 Assignment 2 — Superstore Time Analysis</div><div class="mini-assign-desc">Load Superstore.csv (use encoding_errors='ignore'). Convert Order Date and Ship Date to datetime. Extract year and month. groupby year → sum Profit. groupby month → mean Sales. Which month is most profitable?</div></div>
     <div class="mini-assign"><div class="mini-assign-title">🔍 Assignment 3 — Data Audit Function</div><div class="mini-assign-desc">Write <code>audit_data(df)</code> that prints: shape, dtypes, isnull().sum(), nunique() for object cols, mean() for numeric cols. Run it on StudentsPerformance.csv and Superstore.csv.</div></div>
     <div class="mini-assign"><div class="mini-assign-title">🏆 Assignment 4 — Top Performers</div><div class="mini-assign-desc">Filter students scoring above 85 in all 3 subjects. What % of total are they? Use groupby('gender') for breakdown. Which parental education is most common via value_counts()?</div></div>
-    <div class="mini-assign"><div class="mini-assign-title">🧹 Assignment 5 — Full Data Pipeline</div><div class="mini-assign-desc">Build a complete pipeline on any dataset: read_csv → check missing → fillna or dropna → add computed column → rename → sort_values → groupby + agg. Document each step with a comment.</div></div>
+    <div class="mini-assign"><div class="mini-assign-title">📈 Assignment 5 — Play Store Visual Report</div><div class="mini-assign-desc">Load Google Play Store data. Clean Price column. Build 4 charts: (1) yearly avg rating line plot, (2) rating vs price scatter, (3) z-score rating boxplot, (4) category vs avg rating bar chart. Add proper titles, labels, and axis rotation. Save each chart with plt.savefig().</div></div>
+    <div class="mini-assign"><div class="mini-assign-title">🧹 Assignment 6 — Full Data Pipeline</div><div class="mini-assign-desc">Build a complete pipeline on any dataset: read_csv → check missing → fillna or dropna → add computed column → rename → sort_values → groupby + agg → visualize with at least 2 chart types. Document each step with a comment.</div></div>
   </div>
 
   <!-- Cheat Sheet -->
   <div class="topic-section" style="margin-top:1.75rem">
-    <div class="topic-header"><span class="topic-num">📋</span><span class="topic-title">Complete Pandas Cheat Sheet</span></div>
+    <div class="topic-header"><span class="topic-num">📋</span><span class="topic-title">Complete Pandas + Matplotlib Cheat Sheet</span></div>
     <div class="topic-body">
       <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
       <pre><code><span class="k">import</span> <span class="v">pandas</span> <span class="k">as</span> <span class="v">pd</span>
+<span class="k">import</span> <span class="v">matplotlib.pyplot</span> <span class="k">as</span> <span class="v">plt</span>
 
 <span class="c"># ── CREATION ─────────────────────────────────────────────</span>
 <span class="v">pd</span>.<span class="f">Series</span>([<span class="n">1</span>,<span class="n">2</span>,<span class="n">3</span>])
@@ -1092,7 +1397,15 @@ dtype: object</div>
 <span class="v">df</span>[<span class="s">'col'</span>].<span class="f">str</span>.<span class="f">split</span>().<span class="f">str</span>[<span class="n">0</span>]     <span class="c"># first word</span>
 <span class="v">df</span>[<span class="s">'col'</span>].<span class="f">str</span>.<span class="f">split</span>().<span class="f">str</span>[<span class="n">-1</span>]    <span class="c"># last word</span>
 <span class="v">df</span>[<span class="s">'col'</span>].<span class="f">str</span>.<span class="f">replace</span>(<span class="s">','</span>,<span class="s">''</span>)     <span class="c"># remove commas</span>
-<span class="v">df</span>[<span class="s">'col'</span>].<span class="f">str</span>.<span class="f">strip</span>()             <span class="c"># trim whitespace</span></code></pre></div>
+<span class="v">df</span>[<span class="s">'col'</span>].<span class="f">str</span>.<span class="f">strip</span>()             <span class="c"># trim whitespace</span>
+
+<span class="c"># ── MATPLOTLIB ───────────────────────────────────────────</span>
+<span class="v">s</span> = <span class="v">df</span>.<span class="f">groupby</span>(<span class="s">'Year'</span>)[<span class="s">'col'</span>].<span class="f">mean</span>()
+<span class="v">plt</span>.<span class="f">plot</span>(<span class="v">s</span>, marker=<span class="s">'o'</span>); <span class="v">plt</span>.<span class="f">xticks</span>(<span class="v">s</span>.index)  <span class="c"># line</span>
+<span class="v">plt</span>.<span class="f">scatter</span>(<span class="v">df</span>[<span class="s">'x'</span>], <span class="v">df</span>[<span class="s">'y'</span>])                 <span class="c"># scatter</span>
+<span class="v">plt</span>.<span class="f">bar</span>(<span class="v">s</span>.index, <span class="v">s</span>.values); <span class="v">plt</span>.<span class="f">xticks</span>(rotation=<span class="n">90</span>)  <span class="c"># bar</span>
+<span class="v">plt</span>.<span class="f">boxplot</span>(<span class="v">df</span>[<span class="s">'col'</span>])                         <span class="c"># box</span>
+<span class="v">plt</span>.<span class="f">xlabel</span>(<span class="s">'x'</span>); <span class="v">plt</span>.<span class="f">ylabel</span>(<span class="s">'y'</span>); <span class="v">plt</span>.<span class="f">title</span>(<span class="s">'t'</span>); <span class="v">plt</span>.<span class="f">show</span>()</code></pre></div>
     </div>
   </div>
 </section>
@@ -1102,7 +1415,7 @@ dtype: object</div>
 <footer>
   <strong>🐼 PandasLearn</strong> — Senior Data Science Instructor Series<br/>
   Dataset: <strong>StudentsPerformance.csv</strong> · 1,000 rows · 8 columns · 1 real NaN in race/ethnicity<br/>
-  Topics: Basics · Selection · Filtering · Categorical · Aggregation · Missing · Cleaning · GroupBy · Creation · Transform · apply() · DateTime · Strings<br/>
+  Topics: Basics · Selection · Filtering · Categorical · Aggregation · Missing · Cleaning · GroupBy · Creation · Transform · apply() · DateTime · Strings · <strong>Matplotlib</strong><br/>
   All code examples from real Jupyter Notebook outputs.
 </footer>
 
