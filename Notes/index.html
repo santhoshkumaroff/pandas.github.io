@@ -165,6 +165,11 @@ footer strong{color:var(--accent);font-family:var(--font-display)}
     <li><a href="#missing">Missing</a></li>
     <li><a href="#cleaning">Cleaning</a></li>
     <li><a href="#groupby">GroupBy</a></li>
+    <li><a href="#creation">Creation</a></li>
+    <li><a href="#transform">Transform</a></li>
+    <li><a href="#apply">Apply</a></li>
+    <li><a href="#datetime">DateTime</a></li>
+    <li><a href="#strings">Strings</a></li>
     <li><a href="#exercises">Exercises</a></li>
   </ul>
   <div class="hamburger" id="ham" onclick="toggleMenu()"><span></span><span></span><span></span></div>
@@ -180,6 +185,11 @@ footer strong{color:var(--accent);font-family:var(--font-display)}
   <a href="#missing" onclick="closeMenu()">❓ Missing Values</a>
   <a href="#cleaning" onclick="closeMenu()">🧹 Cleaning</a>
   <a href="#groupby" onclick="closeMenu()">👥 GroupBy</a>
+  <a href="#creation" onclick="closeMenu()">🧱 Creation</a>
+  <a href="#transform" onclick="closeMenu()">🔄 Transform</a>
+  <a href="#apply" onclick="closeMenu()">⚙️ Apply</a>
+  <a href="#datetime" onclick="closeMenu()">📅 DateTime</a>
+  <a href="#strings" onclick="closeMenu()">🔤 Strings</a>
   <a href="#exercises" onclick="closeMenu()">✏️ Exercises</a>
 </div>
 
@@ -199,7 +209,7 @@ footer strong{color:var(--accent);font-family:var(--font-display)}
       <div class="stat-chips">
         <div class="chip"><span class="chip-icon">📦</span><div><div class="chip-num">1,000</div><div class="chip-label">Student Records</div></div></div>
         <div class="chip"><span class="chip-icon">🗂️</span><div><div class="chip-num">8</div><div class="chip-label">Columns</div></div></div>
-        <div class="chip"><span class="chip-icon">📚</span><div><div class="chip-num">11</div><div class="chip-label">Topics Covered</div></div></div>
+        <div class="chip"><span class="chip-icon">📚</span><div><div class="chip-num">17</div><div class="chip-label">Topics Covered</div></div></div>
       </div>
     </div>
     <div class="hero-terminal">
@@ -316,7 +326,7 @@ writing score                  1000</div>
 
 <!-- SELECTION -->
 <section id="selection">
-  <div class="sec-label">03 & 04 — Selection</div>
+  <div class="sec-label">03 &amp; 04 — Selection</div>
   <h2>Column, Row &amp; Cell Selection</h2>
   <p class="sec-desc">Select exactly the rows and columns you need using three powerful techniques.</p>
 
@@ -365,12 +375,6 @@ writing score                  1000</div>
 <span class="v">df</span>.<span class="f">loc</span>[:, [<span class="s">'gender'</span>]]             <span class="c"># all rows, gender only → 1000 rows × 1 col</span>
 <span class="v">df</span>.<span class="f">loc</span>[<span class="n">10</span>:, [<span class="s">'gender'</span>, <span class="s">'lunch'</span>]] <span class="c"># rows 10+, two cols → 990 rows × 2 cols</span>
 <span class="v">df</span>.<span class="f">loc</span>[<span class="n">10</span>:, <span class="s">'gender'</span>:<span class="s">'lunch'</span>]    <span class="c"># col slice inclusive → 990 rows × 4 cols</span></code></pre></div>
-        <div class="output-label">▸ df.loc[10:, 'gender':'lunch'] — 990 rows × 4 columns</div>
-        <div class="output-box">    gender race/ethnicity parental level of education         lunch
-10    male        group C          associate's degree      standard
-11    male        group D          associate's degree      standard
-12  female        group B                 high school      standard
-...</div>
       </div>
     </div>
   </div>
@@ -398,10 +402,7 @@ writing score                  1000</div>
 <span class="v">df</span>[(<span class="v">df</span>[<span class="s">'gender'</span>] == <span class="s">'female'</span>) <span class="o">&amp;</span> (<span class="v">df</span>[<span class="s">'math score'</span>] > <span class="n">70</span>)]  <span class="c"># 170 rows</span>
 
 <span class="c"># AND: male + standard lunch</span>
-<span class="v">df</span>[(<span class="v">df</span>[<span class="s">'gender'</span>] == <span class="s">'male'</span>) <span class="o">&amp;</span> (<span class="v">df</span>[<span class="s">'lunch'</span>] == <span class="s">'standard'</span>)]   <span class="c"># 316 rows</span>
-
-<span class="c"># ❌ WRONG — TypeError without parentheses</span>
-<span class="c"># df[df['gender']=='female' &amp; df['math score']&gt;70]</span></code></pre></div>
+<span class="v">df</span>[(<span class="v">df</span>[<span class="s">'gender'</span>] == <span class="s">'male'</span>) <span class="o">&amp;</span> (<span class="v">df</span>[<span class="s">'lunch'</span>] == <span class="s">'standard'</span>)]   <span class="c"># 316 rows</span></code></pre></div>
       <div class="callout warn"><div class="callout-icon">⚠️</div><div class="callout-body"><div class="callout-title">Always Wrap Each Condition in ( )</div><div class="callout-text"><code>&amp;</code> and <code>|</code> bind tighter than <code>==</code>, <code>&gt;</code> in Python. Without parentheses you get a TypeError every time.</div></div></div>
     </div>
   </div>
@@ -434,26 +435,12 @@ writing score                  1000</div>
         <pre><code><span class="v">col_names</span> = [<span class="s">'gender'</span>, <span class="s">'race/ethnicity'</span>, <span class="s">'parental level of education'</span>,
              <span class="s">'lunch'</span>, <span class="s">'test preparation course'</span>]
 
-<span class="c"># unique values per column</span>
 <span class="k">for</span> <span class="v">col</span> <span class="k">in</span> <span class="v">col_names</span>:
     <span class="f">print</span>(<span class="s">f"{col} => {df[col].unique()}"</span>)
 
-<span class="c"># nunique per column</span>
 <span class="k">for</span> <span class="v">col</span> <span class="k">in</span> <span class="v">col_names</span>:
     <span class="f">print</span>(<span class="s">f"{col} => {df[col].nunique()}"</span>)</code></pre></div>
-        <div class="output-label">▸ unique() output — notice nan in race/ethnicity!</div>
-        <div class="output-box">gender => ['female' 'male']
-race/ethnicity => [nan 'group C' 'group B' 'group A' 'group D' 'group E']
-parental level of education => ["bachelor's degree" 'some college' "master's degree" ...]
-lunch => ['standard' 'free/reduced']
-test preparation course => ['none' 'completed']</div>
-        <div class="output-label">▸ nunique() output</div>
-        <div class="output-box">gender => 2
-race/ethnicity => 5
-parental level of education => 6
-lunch => 2
-test preparation course => 2</div>
-        <div class="callout tip"><div class="callout-icon">💡</div><div class="callout-body"><div class="callout-title">nunique() Excludes NaN by Default</div><div class="callout-text">Even though <code>race/ethnicity</code> has 6 values (5 groups + 1 NaN), <code>nunique()</code> returns 5 because NaN is not counted. This is why always pair it with <code>isnull().sum()</code>.</div></div></div>
+        <div class="callout tip"><div class="callout-icon">💡</div><div class="callout-body"><div class="callout-title">nunique() Excludes NaN by Default</div><div class="callout-text">Even though <code>race/ethnicity</code> has 6 values (5 groups + 1 NaN), <code>nunique()</code> returns 5 because NaN is not counted. Always pair it with <code>isnull().sum()</code>.</div></div></div>
       </div>
     </div>
   </div>
@@ -472,7 +459,6 @@ test preparation course => 2</div>
     <div class="topic-body">
       <div class="explain-block">
         <h3>axis=0 — Column-wise (default)</h3>
-        <p>Goes <em>down</em> each column. Returns one value per column — the average across all 1000 students per subject.</p>
         <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
         <pre><code><span class="v">df</span>.<span class="f">mean</span>(numeric_only=<span class="k">True</span>, axis=<span class="n">0</span>)</code></pre></div>
         <div class="output-label">▸ Output</div>
@@ -483,13 +469,12 @@ dtype: float64</div>
       </div>
       <div class="explain-block">
         <h3>axis=1 — Row-wise</h3>
-        <p>Goes <em>across</em> each row. Returns one value per student — their personal average score across all 3 subjects.</p>
         <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
         <pre><code><span class="v">df</span>.<span class="f">mean</span>(numeric_only=<span class="k">True</span>, axis=<span class="n">1</span>)</code></pre></div>
         <div class="output-label">▸ Output</div>
-        <div class="output-box">0      72.666667   ← student 0 avg score
-1      82.333333   ← student 1 avg score
-2      92.666667   ← student 2 avg score
+        <div class="output-box">0      72.666667
+1      82.333333
+2      92.666667
 ...
 999    83.000000
 Length: 1000, dtype: float64</div>
@@ -508,8 +493,7 @@ Length: 1000, dtype: float64</div>
     <div class="topic-header"><span class="topic-num">08</span><span class="topic-title">agg() — Multiple Aggregations</span><span class="badge cyan">Power Tool</span></div>
     <div class="topic-body">
       <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
-      <pre><code><span class="c"># Multiple stats on multiple columns</span>
-<span class="v">df</span>[[<span class="s">'reading score'</span>, <span class="s">'math score'</span>, <span class="s">'writing score'</span>]].<span class="f">agg</span>([<span class="s">'mean'</span>, <span class="s">'min'</span>, <span class="s">'max'</span>])</code></pre></div>
+      <pre><code><span class="v">df</span>[[<span class="s">'reading score'</span>, <span class="s">'math score'</span>, <span class="s">'writing score'</span>]].<span class="f">agg</span>([<span class="s">'mean'</span>, <span class="s">'min'</span>, <span class="s">'max'</span>])</code></pre></div>
       <div class="output-label">▸ Output</div>
       <div class="output-box">      reading score  math score  writing score
 mean         69.169      66.089         68.054
@@ -543,36 +527,10 @@ dtype: float64</div>
     <div class="topic-header"><span class="topic-num">09</span><span class="topic-title">isnull(), isna(), notna() — Detection</span><span class="badge amber">Data Quality</span></div>
     <div class="topic-body">
       <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
-      <pre><code><span class="c"># Student dataset — 1 missing in race/ethnicity</span>
-<span class="v">df</span>.<span class="f">isnull</span>().<span class="f">sum</span>()        <span class="c"># count per column</span>
-<span class="c"># race/ethnicity → 1</span>
-
-<span class="c"># Demonstration with a small DataFrame</span>
-<span class="v">df2</span> = <span class="v">pd</span>.<span class="f">DataFrame</span>({
-    <span class="s">'Age'</span>: [<span class="n">22</span>, <span class="k">None</span>, <span class="k">None</span>, <span class="n">30</span>, <span class="n">60</span>],
-    <span class="s">'Sal'</span>: [<span class="k">None</span>, <span class="k">None</span>, <span class="n">25000</span>, <span class="n">40000</span>, <span class="n">150000</span>]
-})
-
-<span class="v">df2</span>.<span class="f">isna</span>()              <span class="c"># True/False for every cell</span>
+      <pre><code><span class="v">df</span>.<span class="f">isnull</span>().<span class="f">sum</span>()        <span class="c"># count per column</span>
 <span class="v">df2</span>.<span class="f">isna</span>().<span class="f">sum</span>()        <span class="c"># Age:2, Sal:2</span>
 <span class="v">df2</span>.<span class="f">isna</span>().<span class="f">sum</span>().<span class="f">sum</span>()  <span class="c"># 4 total</span>
-
-<span class="c"># notna() — opposite of isna()</span>
-<span class="v">df2</span>[<span class="s">'Age'</span>].<span class="f">notna</span>()                    <span class="c"># True where Age exists</span>
 <span class="v">df2</span>[<span class="v">df2</span>[<span class="s">'Age'</span>].<span class="f">notna</span>()]               <span class="c"># filter rows where Age not null</span></code></pre></div>
-      <div class="output-label">▸ df2.isna()</div>
-      <div class="output-box">     Age    Sal
-0  False   True
-1   True   True
-2   True  False
-3  False  False
-4  False  False</div>
-      <div class="output-label">▸ df2.isna().sum() and .sum().sum()</div>
-      <div class="output-box">Age    2
-Sal    2
-dtype: int64
-
-Total: 4</div>
     </div>
   </div>
 
@@ -582,14 +540,8 @@ Total: 4</div>
       <div class="explain-block">
         <h3>fillna() — Replace Missing Values</h3>
         <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
-        <pre><code><span class="c"># Fill all NaN with a constant</span>
-<span class="v">df2</span> = <span class="v">df2</span>.<span class="f">fillna</span>(<span class="n">0</span>)
-
-<span class="c"># inplace=True → modifies original, don't assign result!</span>
-<span class="v">df2</span>.<span class="f">fillna</span>(<span class="n">0</span>, inplace=<span class="k">True</span>)   <span class="c"># ✅ correct</span>
-<span class="c"># df2 = df2.fillna(0, inplace=True)  ← ❌ returns None!</span>
-
-<span class="c"># Different strategy per column</span>
+        <pre><code><span class="v">df2</span> = <span class="v">df2</span>.<span class="f">fillna</span>(<span class="n">0</span>)
+<span class="v">df2</span>.<span class="f">fillna</span>(<span class="n">0</span>, inplace=<span class="k">True</span>)
 <span class="v">df2</span>.<span class="f">fillna</span>({
     <span class="s">'Age'</span>: <span class="v">df2</span>[<span class="s">'Age'</span>].<span class="f">mean</span>(),
     <span class="s">'Sal'</span>: <span class="v">df2</span>[<span class="s">'Sal'</span>].<span class="f">median</span>()
@@ -597,27 +549,9 @@ Total: 4</div>
       </div>
       <div class="explain-block">
         <h3>ffill() and bfill()</h3>
-        <p><strong>ffill()</strong> — forward fill: carries the last valid value forward into NaN cells.<br/><strong>bfill()</strong> — backward fill: takes the next valid value and fills backward.</p>
         <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
         <pre><code><span class="v">df2</span>.<span class="f">ffill</span>()   <span class="c"># forward fill (modern syntax)</span>
-<span class="v">df2</span>.<span class="f">bfill</span>()   <span class="c"># backward fill</span>
-
-<span class="c"># Old syntax — shows FutureWarning in newer Pandas</span>
-<span class="c"># df2.fillna(method='ffill')  ← deprecated</span></code></pre></div>
-        <div class="output-label">▸ ffill() result (Age: 22→22→22)</div>
-        <div class="output-box">    Age       Sal
-0  22.0       NaN    ← Sal still NaN (nothing before it to fill from)
-1  22.0       NaN    ← propagated from row 0
-2  22.0   25000.0
-3  30.0   40000.0
-4  60.0  150000.0</div>
-        <div class="output-label">▸ bfill() result (Age: NaN→30→30)</div>
-        <div class="output-box">    Age       Sal
-0  22.0   25000.0   ← filled from row 2
-1  30.0   25000.0   ← filled from row 2
-2  30.0   25000.0
-3  30.0   40000.0
-4  60.0  150000.0</div>
+<span class="v">df2</span>.<span class="f">bfill</span>()   <span class="c"># backward fill</span></code></pre></div>
       </div>
     </div>
   </div>
@@ -635,18 +569,10 @@ Total: 4</div>
     <div class="topic-header"><span class="topic-num">11</span><span class="topic-title">dropna() — Remove Missing Rows</span><span class="badge pink">Cleaning</span></div>
     <div class="topic-body">
       <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
-      <pre><code><span class="c"># Drop rows where ANY column is missing (default)</span>
-<span class="v">df2</span>.<span class="f">dropna</span>()               <span class="c"># keeps rows 3 and 4 only</span>
-<span class="v">df2</span>.<span class="f">dropna</span>(how=<span class="s">'any'</span>)      <span class="c"># same as default</span>
-
-<span class="c"># Drop rows where ALL columns are missing</span>
-<span class="v">df2</span>.<span class="f">dropna</span>(how=<span class="s">'all'</span>)      <span class="c"># only row 1 (both NaN) removed</span>
-
-<span class="c"># Drop only if a specific column is NaN</span>
-<span class="v">df2</span>.<span class="f">dropna</span>(subset=[<span class="s">'Age'</span>])  <span class="c"># rows 0, 3, 4 remain</span>
-<span class="v">df2</span>.<span class="f">dropna</span>(subset=[<span class="s">'Sal'</span>])  <span class="c"># rows 2, 3, 4 remain</span>
-
-<span class="c"># On the students dataset</span>
+      <pre><code><span class="v">df2</span>.<span class="f">dropna</span>()
+<span class="v">df2</span>.<span class="f">dropna</span>(how=<span class="s">'any'</span>)
+<span class="v">df2</span>.<span class="f">dropna</span>(how=<span class="s">'all'</span>)
+<span class="v">df2</span>.<span class="f">dropna</span>(subset=[<span class="s">'Age'</span>])
 <span class="v">df</span>.<span class="f">dropna</span>(subset=[<span class="s">'race/ethnicity'</span>])  <span class="c"># 999 rows remain</span></code></pre></div>
     </div>
   </div>
@@ -655,14 +581,9 @@ Total: 4</div>
     <div class="topic-header"><span class="topic-num">12</span><span class="topic-title">drop() — Remove Rows or Columns</span><span class="badge pink">Cleaning</span></div>
     <div class="topic-body">
       <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
-      <pre><code><span class="c"># Drop multiple columns (axis=1)</span>
-<span class="v">df</span>.<span class="f">drop</span>([<span class="s">'gender'</span>, <span class="s">'lunch'</span>], axis=<span class="n">1</span>)   <span class="c"># 1000 rows × 6 cols</span>
-
-<span class="c"># Drop column using columns= keyword</span>
-<span class="v">df</span>.<span class="f">drop</span>(columns=[<span class="s">'gender'</span>])             <span class="c"># 1000 rows × 7 cols</span>
-
-<span class="c"># Drop specific rows by index</span>
-<span class="v">df</span>.<span class="f">drop</span>(index=[<span class="n">0</span>, <span class="n">1</span>])                   <span class="c"># 998 rows × 8 cols</span></code></pre></div>
+      <pre><code><span class="v">df</span>.<span class="f">drop</span>([<span class="s">'gender'</span>, <span class="s">'lunch'</span>], axis=<span class="n">1</span>)
+<span class="v">df</span>.<span class="f">drop</span>(columns=[<span class="s">'gender'</span>])
+<span class="v">df</span>.<span class="f">drop</span>(index=[<span class="n">0</span>, <span class="n">1</span>])</code></pre></div>
     </div>
   </div>
 
@@ -670,25 +591,9 @@ Total: 4</div>
     <div class="topic-header"><span class="topic-num">13</span><span class="topic-title">drop_duplicates()</span><span class="badge pink">Cleaning</span></div>
     <div class="topic-body">
       <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
-      <pre><code><span class="v">data</span> = <span class="v">pd</span>.<span class="f">DataFrame</span>({
-    <span class="s">'Gender'</span>: [<span class="s">'male'</span>,<span class="s">'female'</span>,<span class="s">'female'</span>,<span class="k">None</span>,<span class="s">'male'</span>,<span class="s">'male'</span>],
-    <span class="s">'Age'</span>:    [<span class="k">None</span>,<span class="n">30</span>,<span class="n">25</span>,<span class="k">None</span>,<span class="n">40</span>,<span class="n">40</span>],
-    <span class="s">'Sal'</span>:    [<span class="n">50000</span>,<span class="k">None</span>,<span class="n">25000</span>,<span class="k">None</span>,<span class="n">100000</span>,<span class="n">100000</span>]
-})  <span class="c"># rows 4 and 5 are identical</span>
-
-<span class="v">updated</span> = <span class="v">data</span>.<span class="f">drop_duplicates</span>()  <span class="c"># 5 rows remain</span>
-
-<span class="c"># Count removed duplicates</span>
+      <pre><code><span class="v">updated</span> = <span class="v">data</span>.<span class="f">drop_duplicates</span>()  <span class="c"># 5 rows remain</span>
 <span class="v">count_</span> = <span class="v">data</span>.shape[<span class="n">0</span>] - <span class="v">updated</span>.shape[<span class="n">0</span>]
 <span class="f">print</span>(<span class="v">count_</span>)  <span class="c"># 1</span></code></pre></div>
-      <div class="output-label">▸ Before (6 rows) → After (5 rows)</div>
-      <div class="output-box">  Gender   Age    Sal        Gender   Age    Sal
-   male    NaN  50000         male    NaN  50000
- female   30.0    NaN   →   female   30.0    NaN
- female   25.0  25000       female   25.0  25000
-   None   NaN    NaN           None   NaN    NaN
-   male   40.0  100000         male   40.0  100000
-   male   40.0  100000   ← REMOVED (exact duplicate)</div>
     </div>
   </div>
 </section>
@@ -710,139 +615,374 @@ Total: 4</div>
         <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Combine</div><div class="step-desc">Results are combined back into a single DataFrame indexed by the group values.</div></div></div>
       </div>
       <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
-      <pre><code><span class="c"># Create GroupBy object</span>
-<span class="v">group</span> = <span class="v">df</span>.<span class="f">groupby</span>(<span class="s">'gender'</span>)
-
-<span class="c"># Inspect group index → shows which rows belong to each group</span>
-<span class="v">group</span>.groups   <span class="c"># {'female': [0,1,2,...], 'male': [3,4,...]}</span>
-
-<span class="c"># Extract a specific group as a DataFrame</span>
-<span class="v">female</span> = <span class="v">group</span>.<span class="f">get_group</span>(<span class="s">'female'</span>)  <span class="c"># 518 rows</span>
-<span class="v">male</span>   = <span class="v">group</span>.<span class="f">get_group</span>(<span class="s">'male'</span>)    <span class="c"># 482 rows</span>
-
-<span class="c"># Compute mean math score per gender</span>
-<span class="v">female</span>[<span class="s">'math score'</span>].<span class="f">mean</span>()   <span class="c"># 63.63</span>
-<span class="v">male</span>[<span class="s">'math score'</span>].<span class="f">mean</span>()     <span class="c"># 68.73</span>
-
-<span class="c"># Equivalent using agg on filtered df</span>
-<span class="v">female</span>.<span class="f">agg</span>({<span class="s">'math score'</span>: <span class="s">'mean'</span>})
-
-<span class="c"># Most efficient: groupby + agg in one line</span>
+      <pre><code><span class="v">group</span> = <span class="v">df</span>.<span class="f">groupby</span>(<span class="s">'gender'</span>)
+<span class="v">female</span> = <span class="v">group</span>.<span class="f">get_group</span>(<span class="s">'female'</span>)
 <span class="v">group</span>.<span class="f">agg</span>({<span class="s">'math score'</span>: <span class="s">'mean'</span>})</code></pre></div>
       <div class="output-label">▸ group.agg({'math score': 'mean'})</div>
       <div class="output-box">        math score
 gender
 female   63.633205
 male     68.728216</div>
-      <div class="callout tip"><div class="callout-icon">💡</div><div class="callout-body"><div class="callout-title">Real Insight from Your Data</div><div class="callout-text">Male students score ~5 points higher in math (68.7 vs 63.6). But don't stop there — female students typically outperform in reading and writing. Always compare all subjects before drawing conclusions!</div></div></div>
 
       <div class="explain-block" style="margin-top:1.75rem">
-        <h3>⭐ agg() with Multiple Stats — The Key Pattern</h3>
-        <p>Pass a <strong>list</strong> as the value in the dict to get multiple statistics for the same column in one shot. This is one of the most powerful and frequently tested patterns.</p>
-
+        <h3>⭐ agg() with Multiple Stats</h3>
         <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
-        <pre><code><span class="c"># ⭐ Core pattern — mean AND min in one call</span>
-<span class="v">group</span>.<span class="f">agg</span>({<span class="s">'math score'</span>: [<span class="s">'mean'</span>, <span class="s">'min'</span>]})</code></pre></div>
-        <div class="output-label">▸ Output</div>
-        <div class="output-box">       math score
-             mean  min
-gender
-female      63.63    0
-male        68.73    4</div>
-
-        <div class="code-wrap" style="margin-top:1.1rem"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
-        <pre><code><span class="c"># Four stats on one column</span>
-<span class="v">group</span>.<span class="f">agg</span>({<span class="s">'math score'</span>: [<span class="s">'mean'</span>, <span class="s">'min'</span>, <span class="s">'max'</span>, <span class="s">'std'</span>]})</code></pre></div>
-        <div class="output-label">▸ Output</div>
-        <div class="output-box">       math score
-             mean  min  max        std
-gender
-female      63.63    0  100  16.220055
-male        68.73    4  100  14.590999</div>
-
-        <div class="code-wrap" style="margin-top:1.1rem"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
-        <pre><code><span class="c"># Different stats for different columns</span>
-<span class="v">group</span>.<span class="f">agg</span>({
-    <span class="s">'math score'</span>:    [<span class="s">'mean'</span>, <span class="s">'min'</span>],
-    <span class="s">'reading score'</span>: [<span class="s">'mean'</span>, <span class="s">'max'</span>],
-    <span class="s">'writing score'</span>: <span class="s">'mean'</span>
-})</code></pre></div>
-        <div class="output-label">▸ Output</div>
-        <div class="output-box">       math score       reading score        writing score
-             mean  min          mean   max          mean
-gender
-female      63.63    0         72.61   100         72.47
-male        68.73    4         65.47   100         63.31</div>
-
-        <div class="code-wrap" style="margin-top:1.1rem"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
-        <pre><code><span class="c"># Group by TWO columns at once</span>
+        <pre><code><span class="v">group</span>.<span class="f">agg</span>({<span class="s">'math score'</span>: [<span class="s">'mean'</span>, <span class="s">'min'</span>]})
+<span class="v">group</span>.<span class="f">agg</span>({<span class="s">'math score'</span>: [<span class="s">'mean'</span>, <span class="s">'min'</span>, <span class="s">'max'</span>, <span class="s">'std'</span>]})
 <span class="v">df</span>.<span class="f">groupby</span>([<span class="s">'gender'</span>, <span class="s">'lunch'</span>]).<span class="f">agg</span>({<span class="s">'math score'</span>: [<span class="s">'mean'</span>, <span class="s">'min'</span>]})</code></pre></div>
-        <div class="output-label">▸ Output</div>
-        <div class="output-box">                      math score
-                            mean  min
-gender lunch
-female free/reduced        58.08    0
-       standard            68.26    5
-male   free/reduced        62.37    4
-       standard            71.92    7</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        <table class="comp-table" style="margin-top:1.2rem">
-          <thead><tr><th>Syntax</th><th>What you get</th><th>Use when</th></tr></thead>
-          <tbody>
-            <tr><td><code>agg({'col': 'mean'})</code></td><td>One stat, one column</td><td>Simple summary</td></tr>
-            <tr><td><code>agg({'col': ['mean','min']})</code></td><td>Multiple stats, one column</td><td>Need range + average ⭐</td></tr>
-            <tr><td><code>agg({'c1':['mean'],'c2':'max'})</code></td><td>Different stats per column</td><td>Custom report</td></tr>
-            <tr><td><code>groupby(['c1','c2']).agg(...)</code></td><td>Multi-level groups</td><td>Segment analysis</td></tr>
-          </tbody>
-        </table>
+<div class="divider"></div>
+
+<!-- SERIES & DATAFRAME CREATION -->
+<section id="creation">
+  <div class="sec-label">12 — Series &amp; DataFrame Creation</div>
+  <h2>Creating Series &amp; DataFrames</h2>
+  <p class="sec-desc">Before reading CSV files, you can create Pandas objects directly from Python lists and dictionaries.</p>
+
+  <div class="topic-section">
+    <div class="topic-header"><span class="topic-num">15</span><span class="topic-title">pd.Series() — 1D Labeled Array</span><span class="badge green">Fundamentals</span></div>
+    <div class="topic-body">
+      <div class="explain-block">
+        <h3>What is a Series?</h3>
+        <p>A <strong>Series</strong> is a one-dimensional array with labels (index). Think of it as a single column from a spreadsheet. Every element has an index (0, 1, 2…) and a value.</p>
+        <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><code><span class="k">import</span> <span class="v">pandas</span> <span class="k">as</span> <span class="v">pd</span>
+
+<span class="c"># Create a Series from a list</span>
+<span class="v">s</span> = <span class="v">pd</span>.<span class="f">Series</span>([<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>, <span class="n">4</span>, <span class="n">5</span>, <span class="s">'Hello'</span>])
+<span class="f">print</span>(<span class="v">s</span>)</code></pre></div>
+        <div class="output-label">▸ Output — notice dtype is 'object' because of mixed types</div>
+        <div class="output-box">0        1
+1        2
+2        3
+3        4
+4        5
+5    Hello
+dtype: object</div>
+        <div class="callout tip"><div class="callout-icon">💡</div><div class="callout-body"><div class="callout-title">Mixed Types → dtype: object</div><div class="callout-text">When a Series contains both numbers and strings, Pandas uses <code>dtype: object</code>. A pure int list gives <code>int64</code>; a pure float list gives <code>float64</code>.</div></div></div>
       </div>
     </div>
   </div>
 
-  <!-- GroupBy Assignment Questions -->
-  <div class="topic-section" style="margin-top:1.5rem">
-    <div class="topic-header"><span class="topic-num">✏️</span><span class="topic-title">GroupBy + agg() — Assignment Questions</span><span class="badge amber">Practice</span></div>
+  <div class="topic-section">
+    <div class="topic-header"><span class="topic-num">16</span><span class="topic-title">pd.DataFrame() — 2D Tabular Structure</span><span class="badge blue">Fundamentals</span></div>
     <div class="topic-body">
+      <div class="explain-block">
+        <h3>Creating a DataFrame from a 2D List</h3>
+        <p>Pass a list of lists (rows) and a <code>columns</code> parameter. Every inner list is one row — all rows must have the same length as the column names list.</p>
+        <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><code><span class="c"># ✅ Correct — rows and columns match</span>
+<span class="v">data</span> = [[<span class="n">22</span>, <span class="n">0</span>, <span class="n">25000</span>],
+        [<span class="n">25</span>, <span class="n">2</span>, <span class="n">30000</span>],
+        [<span class="n">30</span>, <span class="n">5</span>, <span class="n">55000</span>]]
+<span class="v">column_names</span> = [<span class="s">'Age'</span>, <span class="s">'Exp'</span>, <span class="s">'Sal'</span>]
 
-      <h3 style="margin-bottom:1rem">🎤 Interview Questions</h3>
-      <div class="qa-item"><div class="qa-q">What does groupby() return and how do you use it?</div><div class="qa-a">groupby() returns a DataFrameGroupBy object — nothing is computed yet. You chain .agg(), .mean(), or .get_group() on it. The internal pattern is: Split rows into groups → Apply a function → Combine results.</div></div>
-      <div class="qa-item"><div class="qa-q">What is the difference between agg({'col': 'mean'}) and agg({'col': ['mean','min']})?</div><div class="qa-a">The first returns a single-level result with one stat. The second returns a MultiIndex column with both stats side by side — this is the list syntax that gives you multiple statistics per column in one call.</div></div>
-      <div class="qa-item"><div class="qa-q">How do you group by more than one column?</div><div class="qa-a">Pass a list: df.groupby(['gender','lunch']). The result has a MultiIndex — one level per grouping column. This lets you do cross-segment analysis like "female + standard lunch" vs "male + free/reduced".</div></div>
-      <div class="qa-item"><div class="qa-q">What aggregation functions can you pass to agg()?</div><div class="qa-a">'mean', 'min', 'max', 'sum', 'count', 'std', 'median', 'var', 'first', 'last', 'nunique'. You can also pass your own custom Python functions.</div></div>
-
-      <h3 style="margin-top:1.5rem;margin-bottom:1rem">💪 Practice Exercises</h3>
-      <ul class="ex-list">
-        <li><span class="num">01</span>Group by <code>'gender'</code>. Use <code>agg({'math score': ['mean', 'min']})</code>. Which gender has the higher minimum math score?</li>
-        <li><span class="num">02</span>Group by <code>'lunch'</code>. Get <code>mean</code>, <code>min</code>, <code>max</code> for all 3 score columns. Which lunch type leads in performance?</li>
-        <li><span class="num">03</span>Group by <code>'test preparation course'</code>. Use <code>agg({'math score': ['mean','min'], 'reading score': ['mean','min']})</code>. Did prep help?</li>
-        <li><span class="num">04</span>Group by <code>'race/ethnicity'</code>. Get the <code>mean</code> math score per group. Which group has the highest average?</li>
-        <li><span class="num">05</span>Group by <code>['gender', 'lunch']</code>. Get <code>mean</code> for math score. How does gender + lunch type affect results?</li>
-        <li><span class="num">06</span>Use <code>get_group('completed')</code> after grouping by test prep. Then run <code>agg(['mean','std'])</code> on score columns.</li>
-        <li><span class="num">07</span>Group by <code>'parental level of education'</code>. Get <code>mean</code> writing score per group. Does higher parental education = higher student scores?</li>
-        <li><span class="num">08</span>Group by <code>'gender'</code>. Use <code>agg({'math score':'mean','reading score':'mean','writing score':'mean'})</code>. Which gender leads in each subject?</li>
-      </ul>
-
-      <h3 style="margin-top:1.5rem;margin-bottom:1rem">🏆 Mini Assignments</h3>
-      <div class="mini-assign">
-        <div class="mini-assign-title">📊 Assignment A — Full Performance Report</div>
-        <div class="mini-assign-desc">Group by <code>'test preparation course'</code>. Use <code>agg({'math score': ['mean','min','max'], 'reading score': ['mean','min','max'], 'writing score': ['mean','min','max']})</code>. Write 3 sentences: did prep help across all subjects equally, or more in some?</div>
+<span class="v">df</span> = <span class="v">pd</span>.<span class="f">DataFrame</span>(<span class="v">data</span>, columns=<span class="v">column_names</span>)</code></pre></div>
+        <div class="output-label">▸ Output</div>
+        <div class="output-box">   Age  Exp    Sal
+0   22    0  25000
+1   25    2  30000
+2   30    5  55000</div>
       </div>
-      <div class="mini-assign">
-        <div class="mini-assign-title">🍽️ Assignment B — Lunch + Gender Breakdown</div>
-        <div class="mini-assign-desc">Group by <code>['gender','lunch']</code>. Use <code>agg({'math score': ['mean','min'], 'writing score': ['mean','min']})</code>. Which combination (gender + lunch) produces the highest math average? The lowest?</div>
-      </div>
-      <div class="mini-assign">
-        <div class="mini-assign-title">🔬 Assignment C — Race/Ethnicity Deep Dive</div>
-        <div class="mini-assign-desc">Group by <code>'race/ethnicity'</code>. Use <code>agg({'math score': ['mean','std'], 'reading score': ['mean','std']})</code>. Which group has the most consistent scores (lowest std)? Which is most variable? What might explain this?</div>
-      </div>
+      <div class="explain-block">
+        <h3>Common Errors When Creating DataFrames</h3>
+        <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><code><span class="c"># ❌ Error 1 — unequal row lengths</span>
+<span class="v">data</span> = [[<span class="n">22</span>, <span class="n">0</span>, <span class="n">25000</span>],
+        [<span class="n">30</span>, <span class="n">5</span>, <span class="n">55000</span>, <span class="n">1</span>]]  <span class="c"># ← 4 items in last row → ValueError</span>
 
-      <div class="callout info" style="margin-top:1.25rem"><div class="callout-icon">🧠</div><div class="callout-body"><div class="callout-title">agg() Quick Reference</div><div class="callout-text">
-        <code>group.agg('mean')</code> — all columns, one stat<br/>
-        <code>group.agg(['mean','min'])</code> — all columns, multiple stats<br/>
-        <code>group.agg({'col': 'mean'})</code> — one column, one stat<br/>
-        <code>group.agg({'col': ['mean','min']})</code> — one column, multiple stats ⭐<br/>
-        <code>group.agg({'c1':['mean'],'c2':'max'})</code> — different stats per column
+<span class="c"># ❌ Error 2 — more column names than data columns</span>
+<span class="v">column_names</span> = [<span class="s">'Age'</span>, <span class="s">'Exp'</span>, <span class="s">'Sal'</span>, <span class="s">'new'</span>]  <span class="c"># ← 4 names, 3 cols → ValueError</span></code></pre></div>
+        <div class="callout warn"><div class="callout-icon">⚠️</div><div class="callout-body"><div class="callout-title">Row Length Must Match Column Count</div><div class="callout-text">Every row in your data list must have exactly the same number of elements as column names. Pandas raises a <code>ValueError</code> otherwise.</div></div></div>
+      </div>
+      <table class="comp-table">
+        <thead><tr><th>Object</th><th>Dimensions</th><th>Creation Syntax</th><th>Analogy</th></tr></thead>
+        <tbody>
+          <tr><td>Series</td><td>1D</td><td><code>pd.Series([1,2,3])</code></td><td>Single spreadsheet column</td></tr>
+          <tr><td>DataFrame</td><td>2D</td><td><code>pd.DataFrame(data, columns=[...])</code></td><td>Full spreadsheet table</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- COLUMN OPERATIONS -->
+<section id="transform">
+  <div class="sec-label">13 — Column Operations</div>
+  <h2>Adding Columns, rename() &amp; sort_values()</h2>
+  <p class="sec-desc">Enrich your DataFrame by computing new columns, renaming existing ones, and sorting rows.</p>
+
+  <div class="topic-section">
+    <div class="topic-header"><span class="topic-num">17</span><span class="topic-title">Adding New Columns</span><span class="badge purple">Transforms</span></div>
+    <div class="topic-body">
+      <div class="explain-block">
+        <h3>Compute a Column from Existing Ones</h3>
+        <p>Assign the result of any operation to a new column name. This creates the column in-place — no need to reassign df.</p>
+        <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><code><span class="c"># Sum across columns (axis=1) → total score per student</span>
+<span class="v">df</span>[<span class="s">'score'</span>] = <span class="v">df</span>[[<span class="s">'reading score'</span>, <span class="s">'writing score'</span>, <span class="s">'math score'</span>]].<span class="f">sum</span>(axis=<span class="n">1</span>)
+
+<span class="c"># Mean across columns → average score per student</span>
+<span class="v">df</span>[<span class="s">'avg'</span>] = <span class="v">df</span>[[<span class="s">'math score'</span>, <span class="s">'reading score'</span>, <span class="s">'writing score'</span>]].<span class="f">mean</span>(axis=<span class="n">1</span>)
+
+<span class="c"># Constant value for every row</span>
+<span class="v">df</span>[<span class="s">'school'</span>] = <span class="s">'Springfield High'</span></code></pre></div>
+        <div class="output-label">▸ df with new 'score' column</div>
+        <div class="output-box">   gender  math score  reading score  writing score  score
+0  female          72             72             74    218
+1  female          69             90             88    247
+2  female          90             95             93    278</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-section">
+    <div class="topic-header"><span class="topic-num">18</span><span class="topic-title">rename() — Rename Columns</span><span class="badge purple">Transforms</span></div>
+    <div class="topic-body">
+      <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><code><span class="c"># Rename using a dict — old name : new name</span>
+<span class="v">df</span> = <span class="v">df</span>.<span class="f">rename</span>(columns={<span class="s">'score'</span>: <span class="s">'final score'</span>})
+
+<span class="c"># Or use inplace=True</span>
+<span class="v">df</span>.<span class="f">rename</span>(columns={<span class="s">'score'</span>: <span class="s">'final score'</span>}, inplace=<span class="k">True</span>)
+
+<span class="c"># Rename multiple at once</span>
+<span class="v">df</span>.<span class="f">rename</span>(columns={
+    <span class="s">'math score'</span>: <span class="s">'math'</span>,
+    <span class="s">'reading score'</span>: <span class="s">'reading'</span>
+})</code></pre></div>
+      <div class="callout warn"><div class="callout-icon">⚠️</div><div class="callout-body"><div class="callout-title">inplace=True vs Reassignment</div><div class="callout-text">Never do <code>df = df.rename(..., inplace=True)</code> — when <code>inplace=True</code>, the method returns <code>None</code>. Use either <code>df = df.rename(...)</code> OR <code>df.rename(..., inplace=True)</code>.</div></div></div>
+    </div>
+  </div>
+
+  <div class="topic-section">
+    <div class="topic-header"><span class="topic-num">19</span><span class="topic-title">sort_values() — Sort Rows</span><span class="badge amber">Must Know</span></div>
+    <div class="topic-body">
+      <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+      <pre><code><span class="c"># Sort by final score — highest first</span>
+<span class="v">df</span>.<span class="f">sort_values</span>(<span class="s">'final score'</span>, ascending=<span class="k">False</span>)
+
+<span class="c"># ignore_index=True → resets row index to 0,1,2…</span>
+<span class="v">df</span>.<span class="f">sort_values</span>(<span class="s">'final score'</span>, ignore_index=<span class="k">True</span>)
+
+<span class="c"># Find the most profitable row in Superstore</span>
+<span class="v">df</span>.<span class="f">sort_values</span>(<span class="s">'Profit'</span>, ascending=<span class="k">False</span>).<span class="f">iloc</span>[<span class="n">0</span>]</code></pre></div>
+      <div class="output-label">▸ Top performers after sort (final score descending)</div>
+      <div class="output-box">     gender race/ethnicity  math score  reading score  writing score  final score
+962  female        group E         100            100            100          300
+458  female        group E         100            100            100          300
+916    male        group E         100            100            100          300</div>
+      <table class="comp-table">
+        <thead><tr><th>Parameter</th><th>Default</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>ascending</code></td><td><code>True</code></td><td>Sort low→high (True) or high→low (False)</td></tr>
+          <tr><td><code>ignore_index</code></td><td><code>False</code></td><td>Reset index to 0,1,2… after sort</td></tr>
+          <tr><td><code>inplace</code></td><td><code>False</code></td><td>Modify original df instead of returning new one</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- APPLY -->
+<section id="apply">
+  <div class="sec-label">14 — apply()</div>
+  <h2>apply() — Custom Functions on Columns</h2>
+  <p class="sec-desc">Apply any Python function — built-in or custom — to every value in a column. The most flexible transformation tool in Pandas.</p>
+
+  <div class="topic-section">
+    <div class="topic-header"><span class="topic-num">20</span><span class="topic-title">apply() with Named and Lambda Functions</span><span class="badge pink">High Frequency</span></div>
+    <div class="topic-body">
+      <div class="explain-block">
+        <h3>Custom Function per Row Value</h3>
+        <p>Define a function that takes a single value and returns the transformed result. Pass it to <code>.apply()</code> — Pandas calls your function once per row automatically.</p>
+        <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><code><span class="c"># Step 1 — Define the function</span>
+<span class="k">def</span> <span class="f">score_grade</span>(<span class="v">val</span>):
+    <span class="k">if</span> <span class="v">val</span> <= <span class="n">50</span>:
+        <span class="k">return</span> <span class="s">'Fail'</span>
+    <span class="k">return</span> <span class="s">'Pass'</span>
+
+<span class="c"># Step 2 — Apply it (called once per row)</span>
+<span class="v">df</span>[<span class="s">'score'</span>] = <span class="v">df</span>[<span class="s">'avg'</span>].<span class="f">apply</span>(<span class="v">score_grade</span>)
+
+<span class="c"># Equivalent using a lambda</span>
+<span class="v">df</span>[<span class="s">'score'</span>] = <span class="v">df</span>[<span class="s">'avg'</span>].<span class="f">apply</span>(<span class="k">lambda</span> <span class="v">val</span>: <span class="s">'Fail'</span> <span class="k">if</span> <span class="v">val</span> <= <span class="n">50</span> <span class="k">else</span> <span class="s">'Pass'</span>)</code></pre></div>
+        <div class="output-label">▸ Before and after apply()</div>
+        <div class="output-box">avg              score
+72.67     →      Pass
+82.33     →      Pass
+49.33     →      Fail
+76.33     →      Pass</div>
+      </div>
+      <div class="explain-block">
+        <h3>Real-World Example — Cleaning a Messy Column</h3>
+        <p>apply() shines when you have multi-condition logic that can't be done with simple vectorized ops.</p>
+        <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><code><span class="c"># Real data: Size column has '19M', '512k', 'Varies with device'</span>
+<span class="k">def</span> <span class="f">clean_size</span>(<span class="v">val</span>):
+    <span class="k">if</span> <span class="s">'M'</span> <span class="k">in</span> <span class="v">val</span>:
+        <span class="k">return</span> <span class="v">val</span>.<span class="f">removesuffix</span>(<span class="s">'M'</span>)      <span class="c"># '19M' → '19'</span>
+    <span class="k">if</span> <span class="s">'k'</span> <span class="k">in</span> <span class="v">val</span>:
+        <span class="k">return</span> <span class="v">val</span>.<span class="f">removesuffix</span>(<span class="s">'k'</span>)      <span class="c"># '512k' → '512'</span>
+    <span class="k">if</span> <span class="v">val</span> == <span class="s">'Varies with device'</span>:
+        <span class="k">return</span> <span class="k">None</span>
+
+<span class="v">df</span>[<span class="s">'Size'</span>] = <span class="v">df</span>[<span class="s">'Size'</span>].<span class="f">apply</span>(<span class="v">clean_size</span>)
+<span class="v">df</span>[<span class="s">'Size'</span>] = <span class="v">df</span>[<span class="s">'Size'</span>].<span class="f">astype</span>(<span class="v">float</span>)   <span class="c"># convert string → number</span></code></pre></div>
+      </div>
+      <div class="callout info"><div class="callout-icon">🧠</div><div class="callout-body"><div class="callout-title">When to Use apply() vs Direct Operations</div><div class="callout-text">
+        Use <strong>direct vectorized ops</strong> when possible (faster): <code>df['col'] * 2</code>, <code>df['col'].str.upper()</code><br/>
+        Use <strong>apply()</strong> when you need conditionals (if/else), multiple conditions, or complex multi-step logic per value.
       </div></div></div>
+      <table class="comp-table">
+        <thead><tr><th>Approach</th><th>Speed</th><th>Use Case</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td>Vectorized</td><td>Fast ⚡</td><td>Simple math/string ops</td><td><code>df['col'] + 10</code></td></tr>
+          <tr><td><code>apply(fn)</code></td><td>Moderate</td><td>Complex per-value logic</td><td><code>df['col'].apply(fn)</code></td></tr>
+          <tr><td>Lambda</td><td>Moderate</td><td>Short inline transforms</td><td><code>.apply(lambda x: x*2)</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- DATETIME -->
+<section id="datetime">
+  <div class="sec-label">15 — DateTime</div>
+  <h2>Working with Dates — pd.to_datetime() &amp; .dt</h2>
+  <p class="sec-desc">Real-world data always has dates stored as strings. Learn to convert them and extract year, month, day for time-based analysis.</p>
+
+  <div class="topic-section">
+    <div class="topic-header"><span class="topic-num">21</span><span class="topic-title">pd.to_datetime() — Convert Strings to Dates</span><span class="badge cyan">Time Series</span></div>
+    <div class="topic-body">
+      <div class="explain-block">
+        <h3>The Problem — Dates Loaded as Strings</h3>
+        <p>When you load a CSV, date columns come in as <code>object</code> (string) type. You can't do date arithmetic or extract year/month without converting first.</p>
+        <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><code><span class="c"># Load with encoding fix for special characters</span>
+<span class="v">df</span> = <span class="v">pd</span>.<span class="f">read_csv</span>(<span class="s">'Sample - Superstore.csv'</span>, encoding_errors=<span class="s">'ignore'</span>)
+<span class="c"># Alternative: encoding='latin1'</span>
+
+<span class="c"># Before: Order Date dtype is 'object' (string)</span>
+<span class="c"># Convert one column</span>
+<span class="v">df</span>[<span class="s">'Order Date'</span>] = <span class="v">pd</span>.<span class="f">to_datetime</span>(<span class="v">df</span>[<span class="s">'Order Date'</span>], format=<span class="s">'mixed'</span>)
+
+<span class="c"># Convert multiple date columns with a loop</span>
+<span class="k">for</span> <span class="v">col</span> <span class="k">in</span> [<span class="s">'Order Date'</span>, <span class="s">'Ship Date'</span>]:
+    <span class="v">df</span>[<span class="v">col</span>] = <span class="v">pd</span>.<span class="f">to_datetime</span>(<span class="v">df</span>[<span class="v">col</span>], format=<span class="s">'mixed'</span>)</code></pre></div>
+        <div class="output-label">▸ df.info() before and after</div>
+        <div class="output-box">BEFORE:                          AFTER:
+Order Date  object       →       Order Date  datetime64[ns]
+Ship Date   object       →       Ship Date   datetime64[ns]</div>
+      </div>
+      <div class="explain-block">
+        <h3>.dt Accessor — Extract Date Parts</h3>
+        <p>Once a column is <code>datetime64</code>, the <code>.dt</code> accessor unlocks year, month, day, and more — all vectorized.</p>
+        <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><code><span class="c"># Extract year → new column</span>
+<span class="v">df</span>[<span class="s">'year'</span>]  = <span class="v">df</span>[<span class="s">'Order Date'</span>].dt.year
+<span class="v">df</span>[<span class="s">'month'</span>] = <span class="v">df</span>[<span class="s">'Order Date'</span>].dt.month
+<span class="v">df</span>[<span class="s">'day'</span>]   = <span class="v">df</span>[<span class="s">'Order Date'</span>].dt.day
+
+<span class="c"># Now group by year to see profit trends!</span>
+<span class="v">df</span>.<span class="f">groupby</span>(<span class="s">'year'</span>).<span class="f">agg</span>({<span class="s">'Profit'</span>: <span class="s">'sum'</span>})</code></pre></div>
+        <div class="output-label">▸ Yearly profit trend</div>
+        <div class="output-box">          Profit
+year
+2014   49543.97
+2015   61618.60
+2016   81795.17
+2017   93439.27</div>
+        <div class="callout tip"><div class="callout-icon">💡</div><div class="callout-body"><div class="callout-title">The Date Analysis Workflow</div><div class="callout-text">The typical pattern: <strong>read_csv → to_datetime → .dt.year → groupby(year)</strong>. Four steps from raw CSV to yearly trend analysis.</div></div></div>
+      </div>
+      <table class="comp-table">
+        <thead><tr><th>.dt attribute</th><th>Returns</th><th>Example value</th></tr></thead>
+        <tbody>
+          <tr><td><code>.dt.year</code></td><td>Year as int</td><td>2016</td></tr>
+          <tr><td><code>.dt.month</code></td><td>Month (1–12)</td><td>11</td></tr>
+          <tr><td><code>.dt.day</code></td><td>Day of month</td><td>8</td></tr>
+          <tr><td><code>.dt.dayofweek</code></td><td>Weekday (0=Mon)</td><td>1</td></tr>
+          <tr><td><code>.dt.quarter</code></td><td>Quarter (1–4)</td><td>4</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- STRING METHODS -->
+<section id="strings">
+  <div class="sec-label">16 — String Methods</div>
+  <h2>String Operations with .str</h2>
+  <p class="sec-desc">Pandas has a .str accessor that lets you apply Python string methods to entire columns at once — no loops needed.</p>
+
+  <div class="topic-section">
+    <div class="topic-header"><span class="topic-num">22</span><span class="topic-title">str.split(), str[0], str[-1] — Splitting Text</span><span class="badge green">String Ops</span></div>
+    <div class="topic-body">
+      <div class="explain-block">
+        <h3>Splitting a Name Column into First/Last</h3>
+        <p>The <code>.str.split()</code> method splits each string into a list. Chain <code>.str[0]</code> or <code>.str[-1]</code> to extract the first or last element from every list.</p>
+        <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><code><span class="c"># Customer Name: 'Claire Gute', 'Darrin Van Huff', ...</span>
+
+<span class="c"># Extract first name</span>
+<span class="v">df</span>[<span class="s">'first_name'</span>] = <span class="v">df</span>[<span class="s">'Customer Name'</span>].<span class="f">str</span>.<span class="f">split</span>().<span class="f">str</span>[<span class="n">0</span>]
+
+<span class="c"># Extract last name — str[-1] gets the last element</span>
+<span class="v">df</span>[<span class="s">'last_name'</span>] = <span class="v">df</span>[<span class="s">'Customer Name'</span>].<span class="f">str</span>.<span class="f">split</span>().<span class="f">str</span>[<span class="n">-1</span>]
+
+<span class="c"># Access one row's split result (returns a plain Python list)</span>
+<span class="v">df</span>[<span class="s">'Customer Name'</span>].<span class="f">str</span>.<span class="f">split</span>()[<span class="n">0</span>]   <span class="c"># ['Claire', 'Gute']</span></code></pre></div>
+        <div class="output-label">▸ first_name column</div>
+        <div class="output-box">0       Claire
+1       Claire
+2       Darrin
+3         Sean
+...
+9990      Dave
+dtype: object</div>
+        <div class="output-label">▸ last_name column</div>
+        <div class="output-box">0           Gute
+1           Gute
+2           Huff
+3      O'Donnell
+...
+9990        Brooks
+dtype: object</div>
+      </div>
+      <div class="explain-block">
+        <h3>Other Useful .str Methods</h3>
+        <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre><code><span class="v">df</span>[<span class="s">'col'</span>].<span class="f">str</span>.<span class="f">upper</span>()              <span class="c"># 'hello' → 'HELLO'</span>
+<span class="v">df</span>[<span class="s">'col'</span>].<span class="f">str</span>.<span class="f">lower</span>()              <span class="c"># 'HELLO' → 'hello'</span>
+<span class="v">df</span>[<span class="s">'col'</span>].<span class="f">str</span>.<span class="f">strip</span>()              <span class="c"># remove leading/trailing spaces</span>
+<span class="v">df</span>[<span class="s">'col'</span>].<span class="f">str</span>.<span class="f">replace</span>(<span class="s">','</span>, <span class="s">''</span>)     <span class="c"># '1,000' → '1000'</span>
+<span class="v">df</span>[<span class="s">'col'</span>].<span class="f">str</span>.<span class="f">removesuffix</span>(<span class="s">'M'</span>)   <span class="c"># '19M' → '19'</span>
+<span class="v">df</span>[<span class="s">'col'</span>].<span class="f">str</span>.<span class="f">contains</span>(<span class="s">'word'</span>)    <span class="c"># True/False — useful for filtering</span></code></pre></div>
+      </div>
+      <div class="callout info"><div class="callout-icon">🧠</div><div class="callout-body"><div class="callout-title">The .str Chain Pattern</div><div class="callout-text"><code>df['col'].str.split().str[0]</code> — the first <code>.str</code> gives string methods on the Series; the second <code>.str[0]</code> indexes into the list created by split(). This double-.str chain is a common Pandas idiom.</div></div></div>
+      <table class="comp-table">
+        <thead><tr><th>Method</th><th>Input</th><th>Output</th></tr></thead>
+        <tbody>
+          <tr><td><code>.str.split()</code></td><td>'Claire Gute'</td><td>['Claire', 'Gute']</td></tr>
+          <tr><td><code>.str.split().str[0]</code></td><td>'Claire Gute'</td><td>'Claire'</td></tr>
+          <tr><td><code>.str.split().str[-1]</code></td><td>'Darrin Van Huff'</td><td>'Huff'</td></tr>
+          <tr><td><code>.str.replace(',','')</code></td><td>'1,000'</td><td>'1000'</td></tr>
+          <tr><td><code>.str.strip()</code></td><td>' hello '</td><td>'hello'</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </section>
@@ -851,7 +991,7 @@ male   free/reduced        62.37    4
 
 <!-- EXERCISES -->
 <section id="exercises">
-  <div class="sec-label">11 — Teaching Tips</div>
+  <div class="sec-label">17 — Exercises &amp; Review</div>
   <h2>Exercises &amp; Assignments</h2>
   <p class="sec-desc">Test your understanding with interview questions, exercises, and mini projects.</p>
 
@@ -860,34 +1000,35 @@ male   free/reduced        62.37    4
       <div class="ex-card-head"><span class="ex-badge interview">Interview</span><span class="ex-title">Common Questions</span></div>
       <div class="qa-item"><div class="qa-q">loc vs iloc — what's the key difference?</div><div class="qa-a">loc uses labels (end inclusive), iloc uses integer positions (end exclusive). iloc only accepts numbers — passing a column name raises an IndexError.</div></div>
       <div class="qa-item"><div class="qa-q">What does axis=0 vs axis=1 mean?</div><div class="qa-a">axis=0 computes down each column (one result per column). axis=1 computes across each row (one result per row).</div></div>
-      <div class="qa-item"><div class="qa-q">fillna() vs dropna() — when to use each?</div><div class="qa-a">Use fillna() when you want to impute (replace) missing values; use dropna() when rows with NaN are not useful. Dropping too many rows can skew analysis.</div></div>
+      <div class="qa-item"><div class="qa-q">fillna() vs dropna() — when to use each?</div><div class="qa-a">Use fillna() when you want to impute missing values; use dropna() when rows with NaN are not useful. Dropping too many rows can skew analysis.</div></div>
       <div class="qa-item"><div class="qa-q">What is groupby()'s internal pattern?</div><div class="qa-a">Split-Apply-Combine: split rows into groups, apply a function to each group independently, combine results into a single output.</div></div>
-      <div class="qa-item"><div class="qa-q">ffill vs bfill — what's the difference?</div><div class="qa-a">ffill propagates the last known value forward into NaN cells; bfill fills backward from the next known value. Both are used for time-series data.</div></div>
+      <div class="qa-item"><div class="qa-q">What does apply() do and when should you use it?</div><div class="qa-a">apply() calls a Python function once per row value. Use it for complex conditional logic (if/else) that can't be expressed as simple vectorized operations. For simple math or string ops, prefer direct vectorized methods which are faster.</div></div>
+      <div class="qa-item"><div class="qa-q">Why convert a column with pd.to_datetime()?</div><div class="qa-a">Date columns load as strings (object dtype). After to_datetime(), they become datetime64[ns], which unlocks .dt.year, .dt.month, date arithmetic, and time-based groupby — none of which work on strings.</div></div>
     </div>
     <div class="ex-card">
       <div class="ex-card-head"><span class="ex-badge exercise">Exercises</span><span class="ex-title">Practice Problems</span></div>
       <ul class="ex-list">
-        <li><span class="num">01</span>Load the dataset, print shape, and run df.info(). Which column has a missing value?</li>
-        <li><span class="num">02</span>Compute mean of all numeric columns using axis=0. Then compute per-student average using axis=1.</li>
-        <li><span class="num">03</span>Use agg() to get mean, min, max for all 3 score columns in one call.</li>
-        <li><span class="num">04</span>Filter female students who scored above 70 in math. How many are there?</li>
-        <li><span class="num">05</span>Loop through all 5 categorical columns and print unique() and nunique() for each.</li>
-        <li><span class="num">06</span>Create a DataFrame with NaN values. Apply ffill() and bfill(). Explain the output difference.</li>
-        <li><span class="num">07</span>Drop the 'gender' column. Then drop rows 0 and 1 using drop(index=...).</li>
-        <li><span class="num">08</span>Use dropna(subset=['race/ethnicity']). How many rows remain?</li>
-        <li><span class="num">09</span>Use groupby('lunch').agg({'math score': 'mean'}). Which lunch type has higher scores?</li>
-        <li><span class="num">10</span>Use groupby('test preparation course'). Compare mean scores for all 3 subjects.</li>
+        <li><span class="num">01</span>Create a Series with [10, 20, 'hello', 30.5]. What is its dtype and why?</li>
+        <li><span class="num">02</span>Create a DataFrame with 3 rows and columns ['Name', 'Age', 'Score']. What happens if row lengths don't match?</li>
+        <li><span class="num">03</span>Load StudentsPerformance.csv. Add a 'total' column = sum of all 3 scores. Add an 'avg' column = mean.</li>
+        <li><span class="num">04</span>Rename 'math score' to 'math', 'reading score' to 'reading', 'writing score' to 'writing'. Use rename().</li>
+        <li><span class="num">05</span>Sort by the total score column descending. Use ignore_index=True. Who scored 300?</li>
+        <li><span class="num">06</span>Write a function <code>grade(avg)</code> returning 'A' (&gt;=85), 'B' (&gt;=70), 'C' (&gt;=55), 'F' (else). Apply it to the avg column.</li>
+        <li><span class="num">07</span>Load Superstore.csv. Convert 'Order Date' and 'Ship Date' to datetime. Extract year into a new 'year' column.</li>
+        <li><span class="num">08</span>Using Superstore, group by 'year' and get total Profit per year. Which year had highest profit?</li>
+        <li><span class="num">09</span>Extract first names and last names from 'Customer Name' using str.split().str[0] and str[-1].</li>
+        <li><span class="num">10</span>Use groupby('lunch').agg({'math score': 'mean'}). Which lunch type leads in performance?</li>
       </ul>
     </div>
   </div>
 
   <div class="ex-card" style="margin-top:1.4rem">
     <div class="ex-card-head"><span class="ex-badge project">Mini Projects</span><span class="ex-title">Real-World Assignments</span></div>
-    <div class="mini-assign"><div class="mini-assign-title">📊 Assignment 1 — Test Prep Impact</div><div class="mini-assign-desc">Use groupby('test preparation course') and agg(['mean','min','max']) for all 3 score columns. Did completing the prep course improve scores significantly? Write a 2-sentence conclusion.</div></div>
-    <div class="mini-assign"><div class="mini-assign-title">🍽️ Assignment 2 — Lunch &amp; Performance</div><div class="mini-assign-desc">Group by 'lunch'. For each group, compute mean scores using agg(). Which group performs better and by how much? Does the gap differ across subjects?</div></div>
-    <div class="mini-assign"><div class="mini-assign-title">🏆 Assignment 3 — Top Performers</div><div class="mini-assign-desc">Filter students scoring above 85 in all 3 subjects. What % of total are they? Use groupby('gender') for breakdown. Which parental education is most common via value_counts()?</div></div>
-    <div class="mini-assign"><div class="mini-assign-title">🔍 Assignment 4 — Data Audit Function</div><div class="mini-assign-desc">Write <code>audit_data(df)</code> that prints: shape, dtypes, isnull().sum(), nunique() for categorical cols, and mean() for numeric cols. Run it on StudentsPerformance.csv.</div></div>
-    <div class="mini-assign"><div class="mini-assign-title">🧹 Assignment 5 — Missing Value Strategy</div><div class="mini-assign-desc">The race/ethnicity column has 1 NaN. Try both strategies: dropna(subset=['race/ethnicity']) and fillna('Unknown'). Which is more appropriate? What would change downstream in analysis?</div></div>
+    <div class="mini-assign"><div class="mini-assign-title">📊 Assignment 1 — Student Grading System</div><div class="mini-assign-desc">Load StudentsPerformance.csv. Add a 'total' column (sum of all 3 scores). Add an 'avg' column (mean). Write an apply() function that assigns grades A/B/C/F. Sort by total descending. How many students got all 100s?</div></div>
+    <div class="mini-assign"><div class="mini-assign-title">📅 Assignment 2 — Superstore Time Analysis</div><div class="mini-assign-desc">Load Superstore.csv (use encoding_errors='ignore'). Convert Order Date and Ship Date to datetime. Extract year and month. groupby year → sum Profit. groupby month → mean Sales. Which month is most profitable?</div></div>
+    <div class="mini-assign"><div class="mini-assign-title">🔍 Assignment 3 — Data Audit Function</div><div class="mini-assign-desc">Write <code>audit_data(df)</code> that prints: shape, dtypes, isnull().sum(), nunique() for object cols, mean() for numeric cols. Run it on StudentsPerformance.csv and Superstore.csv.</div></div>
+    <div class="mini-assign"><div class="mini-assign-title">🏆 Assignment 4 — Top Performers</div><div class="mini-assign-desc">Filter students scoring above 85 in all 3 subjects. What % of total are they? Use groupby('gender') for breakdown. Which parental education is most common via value_counts()?</div></div>
+    <div class="mini-assign"><div class="mini-assign-title">🧹 Assignment 5 — Full Data Pipeline</div><div class="mini-assign-desc">Build a complete pipeline on any dataset: read_csv → check missing → fillna or dropna → add computed column → rename → sort_values → groupby + agg. Document each step with a comment.</div></div>
   </div>
 
   <!-- Cheat Sheet -->
@@ -897,59 +1038,61 @@ male   free/reduced        62.37    4
       <div class="code-wrap"><div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
       <pre><code><span class="k">import</span> <span class="v">pandas</span> <span class="k">as</span> <span class="v">pd</span>
 
+<span class="c"># ── CREATION ─────────────────────────────────────────────</span>
+<span class="v">pd</span>.<span class="f">Series</span>([<span class="n">1</span>,<span class="n">2</span>,<span class="n">3</span>])
+<span class="v">pd</span>.<span class="f">DataFrame</span>([[<span class="n">22</span>,<span class="n">0</span>],[<span class="n">25</span>,<span class="n">2</span>]], columns=[<span class="s">'Age'</span>,<span class="s">'Exp'</span>])
+
 <span class="c"># ── LOADING ──────────────────────────────────────────────</span>
 <span class="v">df</span> = <span class="v">pd</span>.<span class="f">read_csv</span>(<span class="s">"file.csv"</span>)
+<span class="v">df</span> = <span class="v">pd</span>.<span class="f">read_csv</span>(<span class="s">"file.csv"</span>, encoding=<span class="s">'latin1'</span>)
+<span class="v">df</span> = <span class="v">pd</span>.<span class="f">read_csv</span>(<span class="s">"file.csv"</span>, encoding_errors=<span class="s">'ignore'</span>)
 
 <span class="c"># ── INSPECTION ───────────────────────────────────────────</span>
-<span class="v">df</span>.shape                     <span class="c"># (rows, cols)</span>
-<span class="v">df</span>.<span class="f">head</span>() / <span class="v">df</span>.<span class="f">tail</span>()         <span class="c"># preview</span>
-<span class="v">df</span>.<span class="f">info</span>()                    <span class="c"># types + null counts</span>
-<span class="v">df</span>.dtypes / <span class="v">df</span>.columns        <span class="c"># types / names</span>
-<span class="v">df</span>.<span class="f">count</span>()                   <span class="c"># non-null per column</span>
+<span class="v">df</span>.shape / <span class="v">df</span>.<span class="f">head</span>() / <span class="v">df</span>.<span class="f">tail</span>() / <span class="v">df</span>.<span class="f">info</span>() / <span class="v">df</span>.<span class="f">count</span>()
 
 <span class="c"># ── SELECTION ────────────────────────────────────────────</span>
-<span class="v">df</span>[<span class="s">'col'</span>]                    <span class="c"># Series (1D)</span>
-<span class="v">df</span>[[<span class="s">'c1'</span>,<span class="s">'c2'</span>]]             <span class="c"># DataFrame (2D)</span>
-<span class="v">df</span>.<span class="f">iloc</span>[<span class="n">1</span>:,:]               <span class="c"># position-based, exclusive end</span>
-<span class="v">df</span>.<span class="f">loc</span>[<span class="n">10</span>:,<span class="s">'col1'</span>:<span class="s">'col2'</span>]  <span class="c"># label-based, inclusive end</span>
+<span class="v">df</span>[<span class="s">'col'</span>] / <span class="v">df</span>[[<span class="s">'c1'</span>,<span class="s">'c2'</span>]] / <span class="v">df</span>.<span class="f">iloc</span>[<span class="n">1</span>:] / <span class="v">df</span>.<span class="f">loc</span>[<span class="n">10</span>:,<span class="s">'c1'</span>:<span class="s">'c2'</span>]
 
 <span class="c"># ── FILTERING ────────────────────────────────────────────</span>
-<span class="v">df</span>[<span class="v">df</span>[<span class="s">'col'</span>] == <span class="s">'val'</span>]
 <span class="v">df</span>[(<span class="v">df</span>[<span class="s">'c1'</span>]==<span class="s">'v'</span>) <span class="o">&amp;</span> (<span class="v">df</span>[<span class="s">'c2'</span>]><span class="n">70</span>)]  <span class="c"># AND</span>
 <span class="v">df</span>[(<span class="v">df</span>[<span class="s">'c1'</span>]==<span class="s">'v'</span>) <span class="o">|</span> (<span class="v">df</span>[<span class="s">'c2'</span>]><span class="n">70</span>)]  <span class="c"># OR</span>
 
 <span class="c"># ── CATEGORICAL ──────────────────────────────────────────</span>
-<span class="v">df</span>[<span class="s">'col'</span>].<span class="f">unique</span>()            <span class="c"># distinct values</span>
-<span class="v">df</span>[<span class="s">'col'</span>].<span class="f">nunique</span>()           <span class="c"># count distinct (excl NaN)</span>
-<span class="v">df</span>[<span class="s">'col'</span>].<span class="f">value_counts</span>()      <span class="c"># frequency table</span>
+<span class="v">df</span>[<span class="s">'col'</span>].<span class="f">unique</span>() / .<span class="f">nunique</span>() / .<span class="f">value_counts</span>()
 
 <span class="c"># ── AGGREGATION ──────────────────────────────────────────</span>
 <span class="v">df</span>.<span class="f">mean</span>(numeric_only=<span class="k">True</span>, axis=<span class="n">0</span>)  <span class="c"># per column</span>
 <span class="v">df</span>.<span class="f">mean</span>(numeric_only=<span class="k">True</span>, axis=<span class="n">1</span>)  <span class="c"># per row</span>
-<span class="v">df</span>[[<span class="s">'c1'</span>,<span class="s">'c2'</span>]].<span class="f">agg</span>([<span class="s">'mean'</span>,<span class="s">'min'</span>,<span class="s">'max'</span>])
 <span class="v">df</span>.<span class="f">agg</span>({<span class="s">'c1'</span>:<span class="s">'min'</span>, <span class="s">'c2'</span>:<span class="s">'mean'</span>})
 
 <span class="c"># ── MISSING VALUES ───────────────────────────────────────</span>
-<span class="v">df</span>.<span class="f">isnull</span>().<span class="f">sum</span>()             <span class="c"># count per column</span>
-<span class="v">df</span>.<span class="f">isnull</span>().<span class="f">sum</span>().<span class="f">sum</span>()      <span class="c"># total</span>
-<span class="v">df</span>[<span class="s">'col'</span>].<span class="f">notna</span>()             <span class="c"># True where not NaN</span>
-<span class="v">df</span>.<span class="f">fillna</span>(<span class="n">0</span>)                  <span class="c"># fill with constant</span>
-<span class="v">df</span>.<span class="f">fillna</span>({<span class="s">'c'</span>: <span class="v">df</span>[<span class="s">'c'</span>].<span class="f">mean</span>()})  <span class="c"># fill per column</span>
-<span class="v">df</span>.<span class="f">ffill</span>()                    <span class="c"># forward fill</span>
-<span class="v">df</span>.<span class="f">bfill</span>()                    <span class="c"># backward fill</span>
+<span class="v">df</span>.<span class="f">isnull</span>().<span class="f">sum</span>() / .<span class="f">sum</span>().<span class="f">sum</span>()
+<span class="v">df</span>.<span class="f">fillna</span>(<span class="n">0</span>) / <span class="v">df</span>.<span class="f">ffill</span>() / <span class="v">df</span>.<span class="f">bfill</span>()
 
 <span class="c"># ── CLEANING ─────────────────────────────────────────────</span>
-<span class="v">df</span>.<span class="f">dropna</span>()                   <span class="c"># drop rows with any NaN</span>
-<span class="v">df</span>.<span class="f">dropna</span>(how=<span class="s">'all'</span>)          <span class="c"># drop rows all NaN</span>
-<span class="v">df</span>.<span class="f">dropna</span>(subset=[<span class="s">'col'</span>])     <span class="c"># drop if specific col NaN</span>
-<span class="v">df</span>.<span class="f">drop</span>([<span class="s">'c'</span>], axis=<span class="n">1</span>)       <span class="c"># drop column</span>
-<span class="v">df</span>.<span class="f">drop</span>(index=[<span class="n">0</span>,<span class="n">1</span>])          <span class="c"># drop rows</span>
-<span class="v">df</span>.<span class="f">drop_duplicates</span>()           <span class="c"># remove exact duplicate rows</span>
+<span class="v">df</span>.<span class="f">dropna</span>() / <span class="v">df</span>.<span class="f">drop</span>([<span class="s">'c'</span>],axis=<span class="n">1</span>) / <span class="v">df</span>.<span class="f">drop_duplicates</span>()
 
 <span class="c"># ── GROUPBY ──────────────────────────────────────────────</span>
-<span class="v">g</span> = <span class="v">df</span>.<span class="f">groupby</span>(<span class="s">'col'</span>)
-<span class="v">g</span>.<span class="f">get_group</span>(<span class="s">'val'</span>)            <span class="c"># extract one group</span>
-<span class="v">g</span>.<span class="f">agg</span>({<span class="s">'score'</span>: <span class="s">'mean'</span>})      <span class="c"># aggregate each group</span></code></pre></div>
+<span class="v">df</span>.<span class="f">groupby</span>(<span class="s">'col'</span>).<span class="f">agg</span>({<span class="s">'score'</span>:[<span class="s">'mean'</span>,<span class="s">'min'</span>]})
+
+<span class="c"># ── COLUMN OPERATIONS ────────────────────────────────────</span>
+<span class="v">df</span>[<span class="s">'new'</span>] = <span class="v">df</span>[[<span class="s">'c1'</span>,<span class="s">'c2'</span>]].<span class="f">sum</span>(axis=<span class="n">1</span>)   <span class="c"># add column</span>
+<span class="v">df</span> = <span class="v">df</span>.<span class="f">rename</span>(columns={<span class="s">'old'</span>:<span class="s">'new'</span>})    <span class="c"># rename</span>
+<span class="v">df</span>.<span class="f">sort_values</span>(<span class="s">'col'</span>, ascending=<span class="k">False</span>)    <span class="c"># sort</span>
+
+<span class="c"># ── APPLY ────────────────────────────────────────────────</span>
+<span class="v">df</span>[<span class="s">'col'</span>].<span class="f">apply</span>(<span class="v">my_fn</span>)
+<span class="v">df</span>[<span class="s">'col'</span>].<span class="f">apply</span>(<span class="k">lambda</span> <span class="v">x</span>: <span class="s">'A'</span> <span class="k">if</span> <span class="v">x</span>>=<span class="n">85</span> <span class="k">else</span> <span class="s">'B'</span>)
+
+<span class="c"># ── DATETIME ─────────────────────────────────────────────</span>
+<span class="v">df</span>[<span class="s">'date'</span>] = <span class="v">pd</span>.<span class="f">to_datetime</span>(<span class="v">df</span>[<span class="s">'date'</span>], format=<span class="s">'mixed'</span>)
+<span class="v">df</span>[<span class="s">'year'</span>] = <span class="v">df</span>[<span class="s">'date'</span>].dt.year
+
+<span class="c"># ── STRING METHODS ───────────────────────────────────────</span>
+<span class="v">df</span>[<span class="s">'col'</span>].<span class="f">str</span>.<span class="f">split</span>().<span class="f">str</span>[<span class="n">0</span>]     <span class="c"># first word</span>
+<span class="v">df</span>[<span class="s">'col'</span>].<span class="f">str</span>.<span class="f">split</span>().<span class="f">str</span>[<span class="n">-1</span>]    <span class="c"># last word</span>
+<span class="v">df</span>[<span class="s">'col'</span>].<span class="f">str</span>.<span class="f">replace</span>(<span class="s">','</span>,<span class="s">''</span>)     <span class="c"># remove commas</span>
+<span class="v">df</span>[<span class="s">'col'</span>].<span class="f">str</span>.<span class="f">strip</span>()             <span class="c"># trim whitespace</span></code></pre></div>
     </div>
   </div>
 </section>
@@ -959,6 +1102,7 @@ male   free/reduced        62.37    4
 <footer>
   <strong>🐼 PandasLearn</strong> — Senior Data Science Instructor Series<br/>
   Dataset: <strong>StudentsPerformance.csv</strong> · 1,000 rows · 8 columns · 1 real NaN in race/ethnicity<br/>
+  Topics: Basics · Selection · Filtering · Categorical · Aggregation · Missing · Cleaning · GroupBy · Creation · Transform · apply() · DateTime · Strings<br/>
   All code examples from real Jupyter Notebook outputs.
 </footer>
 
